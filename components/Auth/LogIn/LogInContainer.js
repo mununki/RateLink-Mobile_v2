@@ -1,8 +1,11 @@
 import React from "react";
 import LogInPresenter from "./LoginPresenter";
 import { withApollo } from "react-apollo";
-import { LOGIN } from "../Home/HomeContainer";
-import { saveTokenToAsyncStorage } from "../../utils/handleAsyncStorage";
+import { LOGIN } from "./LoginQueries";
+import {
+  saveTokenToAsyncStorage,
+  removeTokenFromAsyncStorage
+} from "../../../utils/handleAsyncStorage";
 
 class LogInContainer extends React.Component {
   state = {
@@ -35,11 +38,13 @@ class LogInContainer extends React.Component {
       alert("Email과 비밀번호를 확인하세요");
     }
   };
+
   render() {
     return (
       <LogInPresenter
         handleChange={this._handleChange}
         handleSubmit={this._handleSubmit}
+        logOut={this._logOut}
       />
     );
   }

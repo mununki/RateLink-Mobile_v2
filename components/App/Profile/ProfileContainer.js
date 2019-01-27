@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import styled from "styled-components/native";
 import { Query } from "react-apollo";
-import { ME } from "../../queries/sharedQueries";
+import { ME } from "../../../queries/sharedQueries";
 
 class ProfileContainer extends React.Component {
   static navigationOptions = {
