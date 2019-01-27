@@ -4,6 +4,11 @@
 
 - Refactoring the current mobile app with GraphQL.
 
+## Tech Stack
+
+- React Native (w/ Expo)
+- GraphQL (Apollo-Client)
+
 ## To-Dos
 
 - [x] Boilerplate (React-Navigation, Apollo-Client)
