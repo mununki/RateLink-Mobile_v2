@@ -13,7 +13,7 @@
 
 - [x] Boilerplate (React-Navigation, Apollo-Client)
 - [x] Log In, Sign Up screens
-- [ ] Rates List
+- [x] Rates List
 - [ ] Rate Input
 - [ ] Rates Power Search
 - [ ] Styling

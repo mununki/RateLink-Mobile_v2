@@ -1,10 +1,10 @@
 import { createStackNavigator, createDrawerNavigator } from "react-navigation";
-import HomeScreen from "./Home";
+import RatesScreen from "./Rates";
 import ProfileScreen from "./Profile";
 
 const RateStack = createStackNavigator({
   Search: {
-    screen: HomeScreen
+    screen: RatesScreen
   }
 });
 
