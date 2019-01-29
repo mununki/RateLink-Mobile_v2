@@ -17,7 +17,7 @@ import {
   GET_LOCATIONS,
   GET_CNTRTYPES
 } from "../Rates/RatesQueries";
-import { SET_QUERYPARAMS } from "../../../lib/clientQueries";
+import { SET_QUERYPARAMS } from "../../../../lib/clientQueries";
 import { withNavigation } from "react-navigation";
 import { Platform, DatePickerIOS, Modal } from "react-native";
 

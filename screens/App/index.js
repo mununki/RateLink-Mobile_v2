@@ -1,16 +1,6 @@
 import { createStackNavigator, createDrawerNavigator } from "react-navigation";
-import RatesScreen from "./Rates";
+import RateStack from "./Rate";
 import ProfileScreen from "./Profile";
-import SearchScreen from "./Search";
-
-const RateStack = createStackNavigator({
-  Rates: {
-    screen: RatesScreen
-  },
-  Search: {
-    screen: SearchScreen
-  }
-});
 
 const ProfileStack = createStackNavigator({
   Profile: {

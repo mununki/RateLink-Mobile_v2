@@ -82,15 +82,6 @@ export const GET_RATES = gql`
   ${FRAGMENT_RATE}
 `;
 
-export const SET_RATE = gql`
-  mutation SetRate($handler: String!, $rateId: Int, $newRate: String) {
-    setRate(handler: $handler, rateId: $rateId, newRate: $newRate) {
-      ...FragmentRate
-    }
-  }
-  ${FRAGMENT_RATE}
-`;
-
 export const GET_INPUTPERSONS = gql`
   query GetInputpersons($search: String) {
     getInputpersons(search: $search) {

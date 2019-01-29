@@ -15,5 +15,8 @@
 - [x] Log In, Sign Up screens
 - [x] Rates List
 - [x] Rates Power Search
-- [ ] Rate Input
+- [x] Rate Input
+- [ ] Rate Modify
+- [ ] Rate Duplicate
+- [ ] Rate Delete
 - [ ] Styling
