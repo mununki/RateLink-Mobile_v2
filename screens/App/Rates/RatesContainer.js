@@ -1,14 +1,23 @@
 import React from "react";
-import { View, Text, Button } from "react-native";
+import { View, Subtitle, Text, Button, Icon } from "@shoutem/ui";
 import { Query, Mutation, withApollo } from "react-apollo";
 import RatesPresenter from "./RatesPresenter";
 import { GET_RATES } from "./RatesQueries";
 import { GET_QUERYPARAMS } from "../../../lib/clientQueries";
 
 class RatesContainer extends React.Component {
-  static navigationOptions = {
-    title: "운임"
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerTitle: "운임",
+      headerRight: (
+        <Button onPress={() => navigation.navigate("Search")}>
+          <Icon name="search" />
+          <Subtitle style={{ marginLeft: -5, marginRight: 10 }}>검색</Subtitle>
+        </Button>
+      )
+    };
   };
+
   render() {
     return (
       <Query query={GET_QUERYPARAMS}>

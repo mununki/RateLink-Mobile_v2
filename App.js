@@ -1,7 +1,10 @@
+import { YellowBox } from "react-native";
 import React from "react";
 import AppNavigator from "./lib/navigation";
 import withApollo from "./lib/withApollo";
 import { AppLoading, Font } from "expo";
+
+YellowBox.ignoreWarnings(["Require cycle"]);
 
 class App extends React.Component {
   state = {
@@ -29,11 +32,9 @@ class App extends React.Component {
   };
   render() {
     const { isFontLoadingComplete, isLoadingComplete } = this.state;
-    if (
-      !isLoadingComplete &&
-      !isFontLoadingComplete &&
-      this.props.skipLoadingScreen
-    ) {
+    if (isLoadingComplete && isFontLoadingComplete) {
+      return <AppNavigator />;
+    } else {
       return (
         <AppLoading
           startAsync={this._loadResourcesAsync}
@@ -41,8 +42,6 @@ class App extends React.Component {
           onError={() => console.log("Error")}
         />
       );
-    } else {
-      return <AppNavigator />;
     }
   }
 }

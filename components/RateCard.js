@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text, Image } from "react-native";
-import { Icon } from "@shoutem/ui/components/Icon";
+import { Image } from "react-native";
+import { Text, Icon, Caption } from "@shoutem/ui";
 import PropTypes from "prop-types";
 import { getAWSS3Url } from "../env.config";
 import styled from "styled-components/native";
@@ -152,7 +152,7 @@ class RateCard extends React.Component {
             name="comment"
             style={{ color: rate.remark ? "#fbbf41" : "#efefef", fontSize: 20 }}
           />
-          <Text style={{ color: "#aaa", marginLeft: 5 }}>{rate.remark}</Text>
+          <Caption style={{ marginLeft: 10 }}>{rate.remark}</Caption>
         </CommentRow>
       </RateCardContainer>
     );
