@@ -18,6 +18,6 @@
 - [x] Rate Input
 - [x] Control the status of children items in ScrollView
 - [x] Rate Modify
-- [ ] Rate Duplicate
+- [x] Rate Duplicate
 - [ ] Rate Delete
 - [ ] Styling

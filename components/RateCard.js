@@ -6,6 +6,10 @@ import { getAWSS3Url } from "../env.config";
 import styled from "styled-components/native";
 import dayjs from "dayjs";
 import { withNavigation } from "react-navigation";
+import { withApollo } from "react-apollo";
+import { SET_RATE } from "../screens/App/Rate/Add/AddQueries";
+import { GET_QUERYPARAMS } from "../lib/clientQueries";
+import { GET_RATES } from "../screens/App/Rate/Rates/RatesQueries";
 
 const AWS_S3_ENDPOINT = getAWSS3Url();
 
@@ -79,11 +83,65 @@ class RateCard extends React.Component {
   state = {
     isOverlayed: false
   };
+
   _toggleOverlay = visible => {
     this.setState({
       isOverlayed: visible
     });
   };
+
+  _handleDuplicate = () => {
+    const { rate } = this.props;
+    this.props.client
+      .mutate({
+        mutation: SET_RATE,
+        variables: {
+          rateId: rate.id,
+          handler: "duplicate"
+        }
+      })
+      .then(res => {
+        const { queryParams } = this.props.client.readQuery({
+          query: GET_QUERYPARAMS
+        });
+        const { getRates } = this.props.client.readQuery({
+          query: GET_RATES,
+          variables: {
+            first: 20,
+            queryParams: JSON.stringify(queryParams),
+            after: null
+          }
+        });
+        this.props.client.writeQuery({
+          query: GET_RATES,
+          variables: {
+            first: 20,
+            queryParams: JSON.stringify(queryParams),
+            after: null
+          },
+          data: {
+            getRates: {
+              ...getRates,
+              data: {
+                ...getRates.data,
+                edges: [
+                  ...res.data.setRate.map(edge => {
+                    const newEdge = {
+                      cursor: edge.id,
+                      node: edge,
+                      __typename: "Rate_rateEdge"
+                    };
+                    return newEdge;
+                  }),
+                  ...getRates.data.edges
+                ]
+              }
+            }
+          }
+        });
+      });
+  };
+
   render() {
     const {
       rate,
@@ -96,14 +154,19 @@ class RateCard extends React.Component {
       <TouchableWithoutFeedback
         ref={node => (this.rateCard = node)}
         onPress={() => {
+          // check if this is touched when other rateCards in the parent view are touched
           if (currentlyOverlayed !== this.rateCard) {
+            // if other rateCard is touched, then disable the overlay
             currentlyOverlayedResolveMethod(false);
           }
         }}
         onLongPress={() => {
+          // check if other card is already overlayted
           if (currentlyOverlayed) {
+            // then disable the overlay
             currentlyOverlayedResolveMethod(false);
           }
+          // set this rateCard and resolveMethod into parent's state
           _updateParentState({
             currentlyOverlayed: this.rateCard,
             currentlyOverlayedResolveMethod: this._toggleOverlay
@@ -194,7 +257,10 @@ class RateCard extends React.Component {
           {isOverlayed ? (
             <Overlay styleName="fill-parent image-overlay">
               <View styleName="horizontal">
-                <Button styleName="lg-gutter-horizontal">
+                <Button
+                  styleName="lg-gutter-horizontal"
+                  onPress={() => this._handleDuplicate()}
+                >
                   <Text>복제</Text>
                 </Button>
                 <Button
@@ -221,4 +287,4 @@ RateCard.propTypes = {
   data: PropTypes.object
 };
 
-export default withNavigation(RateCard);
+export default withNavigation(withApollo(RateCard));
