@@ -8,20 +8,21 @@ import { SET_MODE } from "../../../../lib/clientQueries";
 
 class RatesPresenter extends React.Component {
   state = {
-    currentlyOverlayed: null
+    currentlyOverlayed: null,
+    currentlyOverlayedResolveMethod: null
   };
   _updateParentState = newState => {
     this.setState(newState);
   };
   render() {
     const { rates } = this.props;
-    const { currentlyOverlayed } = this.state;
+    const { currentlyOverlayed, currentlyOverlayedResolveMethod } = this.state;
     return (
       <View>
         <ScrollView
           onScroll={() => {
             if (currentlyOverlayed) {
-              currentlyOverlayed(false);
+              currentlyOverlayedResolveMethod(false);
             }
           }}
           scrollEventThrottle={16}
@@ -31,6 +32,7 @@ class RatesPresenter extends React.Component {
               key={edge.node.id}
               rate={edge.node}
               currentlyOverlayed={currentlyOverlayed}
+              currentlyOverlayedResolveMethod={currentlyOverlayedResolveMethod}
               _updateParentState={this._updateParentState}
             />
           ))}

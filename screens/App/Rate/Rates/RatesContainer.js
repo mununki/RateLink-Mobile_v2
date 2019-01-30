@@ -36,7 +36,6 @@ class RatesContainer extends React.Component {
             );
 
           const queryParams = data.queryParams;
-          console.log(JSON.stringify(queryParams));
           return (
             <Query
               query={GET_RATES}

@@ -17,7 +17,7 @@
 - [x] Rates Power Search
 - [x] Rate Input
 - [x] Control the status of children items in ScrollView
-- [ ] Rate Modify
+- [x] Rate Modify
 - [ ] Rate Duplicate
 - [ ] Rate Delete
 - [ ] Styling

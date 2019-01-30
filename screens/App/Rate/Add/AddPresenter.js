@@ -61,14 +61,56 @@ class AddPresenter extends React.Component {
     };
   }
 
-  componentDidMount() {
-    this._loadMe();
-    this._loadClients();
-    this._loadLiners();
-    this._loadPols();
-    this._loadPods();
-    this._loadCNTRTypes();
+  async componentDidMount() {
+    await this._loadMe();
+    await this._loadClients();
+    await this._loadLiners();
+    await this._loadPols();
+    await this._loadPods();
+    await this._loadCNTRTypes();
+    if (this.props.rate) {
+      this._loadPrevRate();
+    }
   }
+
+  _loadPrevRate = () => {
+    const { rate } = this.props;
+    const { options } = this.state;
+    const indexOfClient = options.clients.findIndex(
+      ct => ct.value === rate.client.id
+    );
+    const indexOfLiner = options.liners.findIndex(
+      ln => ln.value === rate.liner.id
+    );
+    const indexOfPol = options.pols.findIndex(pl => pl.value === rate.pol.id);
+    const indexOfPod = options.pods.findIndex(pd => pd.value === rate.pod.id);
+    const indexOfType = options.types.findIndex(
+      ty => ty.value === rate.cntrtype.id
+    );
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        newRate: {
+          selectedCt: [options.clients[indexOfClient]],
+          selectedLn: [options.liners[indexOfLiner]],
+          selectedPl: [options.pols[indexOfPol]],
+          selectedPd: [options.pods[indexOfPod]],
+          selectedTy: [options.types[indexOfType]],
+          buying20: rate.buying20,
+          buying40: rate.buying40,
+          buying4H: rate.buying4H,
+          selling20: rate.selling20,
+          selling40: rate.selling40,
+          selling4H: rate.selling4H,
+          loadingFT: rate.loadingFT,
+          dischargingFT: rate.dischargingFT,
+          offeredDate: dayjs(rate.offeredDate),
+          effectiveDate: dayjs(rate.effectiveDate),
+          remark: rate.remark
+        }
+      };
+    });
+  };
 
   _loadMe = () =>
     this.props.client
@@ -289,7 +331,23 @@ class AddPresenter extends React.Component {
       .then(() => this.props.navigation.navigate("Rates"));
   };
 
+  _handleModify = () => {
+    const { rate } = this.props;
+    const { newRate } = this.state;
+    this.props.client
+      .mutate({
+        mutation: SET_RATE,
+        variables: {
+          newRate: JSON.stringify(newRate),
+          handler: "modify",
+          rateId: rate.id
+        }
+      })
+      .then(() => this.props.navigation.navigate("Rates"));
+  };
+
   render() {
+    const { rate } = this.props;
     const {
       isOpenSF,
       isOpenST,
@@ -313,6 +371,7 @@ class AddPresenter extends React.Component {
         remark
       }
     } = this.state;
+
     return (
       <View>
         <Subtitle>고객사</Subtitle>
@@ -475,7 +534,12 @@ class AddPresenter extends React.Component {
             style={{ borderWidth: 1, borderColor: "#eee" }}
           />
         </View>
-        <Button styleName="secondary" onPress={() => this._handleSave()}>
+        <Button
+          styleName="secondary"
+          onPress={
+            !rate ? () => this._handleSave() : () => this._handleModify()
+          }
+        >
           <Text>SAVE</Text>
         </Button>
         <Modal animationType="slide" transparent={false} visible={isOpenSF}>

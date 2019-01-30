@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { getAWSS3Url } from "../env.config";
 import styled from "styled-components/native";
 import dayjs from "dayjs";
+import { withNavigation } from "react-navigation";
 
 const AWS_S3_ENDPOINT = getAWSS3Url();
 
@@ -84,15 +85,29 @@ class RateCard extends React.Component {
     });
   };
   render() {
-    const { rate, currentlyOverlayed, _updateParentState } = this.props;
+    const {
+      rate,
+      currentlyOverlayed,
+      currentlyOverlayedResolveMethod,
+      _updateParentState
+    } = this.props;
     const { isOverlayed } = this.state;
     return (
       <TouchableWithoutFeedback
+        ref={node => (this.rateCard = node)}
+        onPress={() => {
+          if (currentlyOverlayed !== this.rateCard) {
+            currentlyOverlayedResolveMethod(false);
+          }
+        }}
         onLongPress={() => {
           if (currentlyOverlayed) {
-            currentlyOverlayed(false);
+            currentlyOverlayedResolveMethod(false);
           }
-          _updateParentState({ currentlyOverlayed: this._toggleOverlay });
+          _updateParentState({
+            currentlyOverlayed: this.rateCard,
+            currentlyOverlayedResolveMethod: this._toggleOverlay
+          });
           this._toggleOverlay(true);
         }}
       >
@@ -182,7 +197,12 @@ class RateCard extends React.Component {
                 <Button styleName="lg-gutter-horizontal">
                   <Text>복제</Text>
                 </Button>
-                <Button styleName="lg-gutter-horizontal">
+                <Button
+                  styleName="lg-gutter-horizontal"
+                  onPress={() =>
+                    this.props.navigation.navigate("Add", { rate })
+                  }
+                >
                   <Text>수정</Text>
                 </Button>
                 <Button styleName="lg-gutter-horizontal">
@@ -201,4 +221,4 @@ RateCard.propTypes = {
   data: PropTypes.object
 };
 
-export default RateCard;
+export default withNavigation(RateCard);
