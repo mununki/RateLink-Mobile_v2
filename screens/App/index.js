@@ -1,6 +1,7 @@
 import { createStackNavigator, createDrawerNavigator } from "react-navigation";
 import RateStack from "./Rate";
 import ProfileScreen from "./Profile";
+import DrawerContainer from "../../components/DrawerContainer";
 
 const ProfileStack = createStackNavigator({
   Profile: {
@@ -8,13 +9,16 @@ const ProfileStack = createStackNavigator({
   }
 });
 
-const AppDrawer = createDrawerNavigator({
-  Home: {
-    screen: RateStack
+const AppDrawer = createDrawerNavigator(
+  {
+    Home: {
+      screen: RateStack
+    },
+    Profile: {
+      screen: ProfileStack
+    }
   },
-  Profile: {
-    screen: ProfileStack
-  }
-});
+  { contentComponent: DrawerContainer, drawerWidth: 200 }
+);
 
 export default AppDrawer;

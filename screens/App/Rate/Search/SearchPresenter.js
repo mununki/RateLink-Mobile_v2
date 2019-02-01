@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  DropDownMenu,
-  View,
-  Text,
-  Subtitle,
-  Spinner,
-  Button,
-  Icon
-} from "@shoutem/ui";
+import { View, Text, Subtitle, Spinner, Button, Icon } from "@shoutem/ui";
 import dayjs from "dayjs";
 import { Query, withApollo } from "react-apollo";
 import {
@@ -19,7 +11,16 @@ import {
 } from "../Rates/RatesQueries";
 import { SET_QUERYPARAMS } from "../../../../lib/clientQueries";
 import { withNavigation } from "react-navigation";
-import { Platform, DatePickerIOS, Modal } from "react-native";
+import {
+  Platform,
+  DatePickerIOS,
+  Modal,
+  DatePickerAndroid
+} from "react-native";
+import {
+  AutoComplete,
+  AsyncComplete
+} from "../../../../components/AutoComplete";
 
 class SearchPresenter extends React.Component {
   constructor(props) {
@@ -29,12 +30,12 @@ class SearchPresenter extends React.Component {
       isOpenSF: false,
       isOpenST: false,
       options: {
-        inputpersons: [{ label: "(선택없음)", value: 0 }],
-        clients: [{ label: "(선택없음)", value: 0 }],
-        liners: [{ label: "(선택없음)", value: 0 }],
-        pols: [{ label: "(선택없음)", value: 0 }],
-        pods: [{ label: "(선택없음)", value: 0 }],
-        types: [{ label: "(선택없음)", value: 0 }]
+        inputpersons: [],
+        clients: [],
+        liners: [],
+        pols: [],
+        pods: [],
+        types: []
       },
       queryParams: {
         selectedIp: [],
@@ -54,151 +55,193 @@ class SearchPresenter extends React.Component {
   }
 
   componentDidMount() {
-    this._loadInputpersons();
-    this._loadClients();
-    this._loadLiners();
-    this._loadPols();
-    this._loadPods();
-    this._loadCNTRTypes();
+    this._loadInputpersons("");
+    this._loadClients("");
+    this._loadLiners("");
+    this._loadCNTRTypes("");
   }
 
-  _loadInputpersons = () =>
-    this.props.client
-      .query({
-        query: GET_INPUTPERSONS,
-        variables: { search: "" }
-      })
-      .then(res =>
-        this.setState(prevState => {
-          let results = [];
-          res.data.getInputpersons.map(ip =>
-            results.push({ label: ip.profile.profile_name, value: ip.id })
-          );
-          results.sort((a, b) => (a.label > b.label ? 1 : -1));
-          return {
-            ...prevState,
-            options: {
-              ...prevState.options,
-              inputpersons: [prevState.options.inputpersons[0], ...results]
-            }
-          };
-        })
+  _loadInputpersons = search => {
+    clearTimeout(this.queryAPIInputperson);
+    if (search || search === "") {
+      this.queryAPIInputperson = setTimeout(
+        () =>
+          this.props.client
+            .query({
+              query: GET_INPUTPERSONS,
+              variables: { search }
+            })
+            .then(res =>
+              this.setState(prevState => {
+                let results = [];
+                res.data.getInputpersons.map(ip =>
+                  results.push({ label: ip.profile.profile_name, value: ip.id })
+                );
+                results.sort((a, b) => (a.label > b.label ? 1 : -1));
+                return {
+                  ...prevState,
+                  options: {
+                    ...prevState.options,
+                    inputpersons: [...results]
+                  }
+                };
+              })
+            ),
+        500
       );
+    }
+  };
 
-  _loadClients = () =>
-    this.props.client
-      .query({
-        query: GET_CLIENTS,
-        variables: { search: "" }
-      })
-      .then(res =>
-        this.setState(prevState => {
-          let results = [];
-          res.data.getClients.map(ct =>
-            results.push({ label: ct.name, value: ct.id })
-          );
-          results.sort((a, b) => (a.label > b.label ? 1 : -1));
-          return {
-            ...prevState,
-            options: {
-              ...prevState.options,
-              clients: [prevState.options.clients[0], ...results]
-            }
-          };
-        })
+  _loadClients = search => {
+    clearTimeout(this.queryAPIClient);
+    if (search || search === "") {
+      this.queryAPIClient = setTimeout(
+        () =>
+          this.props.client
+            .query({
+              query: GET_CLIENTS,
+              variables: { search }
+            })
+            .then(res =>
+              this.setState(prevState => {
+                let results = [];
+                res.data.getClients.map(ct =>
+                  results.push({ label: ct.name, value: ct.id })
+                );
+                results.sort((a, b) => (a.label > b.label ? 1 : -1));
+                return {
+                  ...prevState,
+                  options: {
+                    ...prevState.options,
+                    clients: [...results]
+                  }
+                };
+              })
+            ),
+        500
       );
+    }
+  };
 
-  _loadLiners = () =>
-    this.props.client
-      .query({
-        query: GET_LINERS,
-        variables: { search: "", showOurs: true }
-      })
-      .then(res =>
-        this.setState(prevState => {
-          let results = [];
-          res.data.getLiners.map(ln =>
-            results.push({ label: ln.label, value: ln.id })
-          );
-          results.sort((a, b) => (a.label > b.label ? 1 : -1));
-          return {
-            ...prevState,
-            options: {
-              ...prevState.options,
-              liners: [prevState.options.liners[0], ...results]
-            }
-          };
-        })
+  _loadLiners = search => {
+    clearTimeout(this.queryAPILiner);
+    if (search || search === "") {
+      this.queryAPILiner = setTimeout(
+        () =>
+          this.props.client
+            .query({
+              query: GET_LINERS,
+              variables: { search: search, showOurs: true }
+            })
+            .then(res =>
+              this.setState(prevState => {
+                let results = [];
+                res.data.getLiners.map(ln =>
+                  results.push({ label: ln.label, value: ln.id })
+                );
+                results.sort((a, b) => (a.label > b.label ? 1 : -1));
+                return {
+                  ...prevState,
+                  options: {
+                    ...prevState.options,
+                    liners: [...results]
+                  }
+                };
+              })
+            ),
+        500
       );
+    }
+  };
 
-  _loadPols = () =>
-    this.props.client
-      .query({
-        query: GET_LOCATIONS,
-        variables: { search: "", showOurs: true, polOrPod: "pol" }
-      })
-      .then(res =>
-        this.setState(prevState => {
-          let results = [];
-          res.data.getLocations.map(pl =>
-            results.push({ label: pl.name, value: pl.id })
-          );
-          results.sort((a, b) => (a.label > b.label ? 1 : -1));
-          return {
-            ...prevState,
-            options: {
-              ...prevState.options,
-              pols: [prevState.options.pols[0], ...results]
-            }
-          };
-        })
-      );
+  _loadPols = search => {
+    clearTimeout(this.queryAPIPol);
+    return new Promise((resolve, reject) => {
+      if (!search || search === "") {
+        resolve([]);
+      } else {
+        this.queryAPIPol = setTimeout(
+          () =>
+            this.props.client
+              .query({
+                query: GET_LOCATIONS,
+                variables: { search: search, showOurs: true, polOrPod: "pol" }
+              })
+              .then(res =>
+                this.setState(prevState => {
+                  let results = [];
+                  res.data.getLocations.map(pl =>
+                    results.push({ label: pl.name, value: pl.id })
+                  );
+                  results.sort((a, b) => (a.label > b.label ? 1 : -1));
+                  resolve(results);
+                })
+              ),
+          500
+        );
+      }
+    });
+  };
 
-  _loadPods = () =>
-    this.props.client
-      .query({
-        query: GET_LOCATIONS,
-        variables: { search: "", showOurs: true, polOrPod: "pod" }
-      })
-      .then(res =>
-        this.setState(prevState => {
-          let results = [];
-          res.data.getLocations.map(pd =>
-            results.push({ label: pd.name, value: pd.id })
-          );
-          results.sort((a, b) => (a.label > b.label ? 1 : -1));
-          return {
-            ...prevState,
-            options: {
-              ...prevState.options,
-              pods: [prevState.options.pods[0], ...results]
-            }
-          };
-        })
-      );
+  _loadPods = search => {
+    clearTimeout(this.queryAPIPod);
+    return new Promise((resolve, reject) => {
+      if (!search || search === "") {
+        resolve([]);
+      } else {
+        this.queryAPIPod = setTimeout(
+          () =>
+            this.props.client
+              .query({
+                query: GET_LOCATIONS,
+                variables: { search: search, showOurs: true, polOrPod: "pod" }
+              })
+              .then(res =>
+                this.setState(prevState => {
+                  let results = [];
+                  res.data.getLocations.map(pd =>
+                    results.push({ label: pd.name, value: pd.id })
+                  );
+                  results.sort((a, b) => (a.label > b.label ? 1 : -1));
+                  resolve(results);
+                })
+              ),
+          500
+        );
+      }
+    });
+  };
 
-  _loadCNTRTypes = () =>
-    this.props.client
-      .query({
-        query: GET_CNTRTYPES,
-        variables: { search: "", showOurs: true }
-      })
-      .then(res =>
-        this.setState(prevState => {
-          let results = [];
-          res.data.getCNTRtypes.map(ty =>
-            results.push({ label: ty.name, value: ty.id })
-          );
-          results.sort((a, b) => (a.label > b.label ? 1 : -1));
-          return {
-            ...prevState,
-            options: {
-              ...prevState.options,
-              types: [prevState.options.types[0], ...results]
-            }
-          };
-        })
+  _loadCNTRTypes = search => {
+    clearTimeout(this.queryAPIType);
+    if (search || search === "") {
+      this.queryAPIType = setTimeout(
+        () =>
+          this.props.client
+            .query({
+              query: GET_CNTRTYPES,
+              variables: { search: search, showOurs: true }
+            })
+            .then(res =>
+              this.setState(prevState => {
+                let results = [];
+                res.data.getCNTRtypes.map(ty =>
+                  results.push({ label: ty.name, value: ty.id })
+                );
+                results.sort((a, b) => (a.label > b.label ? 1 : -1));
+                return {
+                  ...prevState,
+                  options: {
+                    ...prevState.options,
+                    types: [...results]
+                  }
+                };
+              })
+            ),
+        500
       );
+    }
+  };
 
   _setInitialSF = newDate => {
     this.setState(prevState => {
@@ -231,6 +274,18 @@ class SearchPresenter extends React.Component {
       .then(res => this.props.navigation.navigate("Rates"));
   };
 
+  _setSelected = (select, target) => {
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        queryParams: {
+          ...prevState.queryParams,
+          [target]: select ? [select] : []
+        }
+      };
+    });
+  };
+
   render() {
     const {
       isOpenSF,
@@ -249,159 +304,153 @@ class SearchPresenter extends React.Component {
     } = this.state;
 
     return (
-      <View styleName="fill-parent vertical space-between">
-        <Subtitle>입력자</Subtitle>
-        <DropDownMenu
-          styleName="horizontal"
-          options={inputpersons}
-          selectedOption={
-            selectedIp.length > 0 ? selectedIp[0] : inputpersons[0]
-          }
-          onOptionSelected={select =>
-            this.setState(prevState => {
-              return {
-                ...prevState,
-                queryParams: {
-                  ...prevState.queryParams,
-                  selectedIp: [select]
-                }
-              };
-            })
-          }
-          titleProperty="label"
-          valueProperty="value"
-        />
-        <Subtitle>고객사</Subtitle>
-        <DropDownMenu
-          styleName="horizontal"
-          options={clients}
-          selectedOption={selectedCt.length > 0 ? selectedCt[0] : clients[0]}
-          onOptionSelected={select =>
-            this.setState(prevState => {
-              return {
-                ...prevState,
-                queryParams: {
-                  ...prevState.queryParams,
-                  selectedCt: [select]
-                }
-              };
-            })
-          }
-          titleProperty="label"
-          valueProperty="value"
-        />
-        <Subtitle>선사</Subtitle>
-        <DropDownMenu
-          styleName="horizontal"
-          options={liners}
-          selectedOption={selectedLn.length > 0 ? selectedLn[0] : liners[0]}
-          onOptionSelected={select =>
-            this.setState(prevState => {
-              return {
-                ...prevState,
-                queryParams: {
-                  ...prevState.queryParams,
-                  selectedLn: [select]
-                }
-              };
-            })
-          }
-          titleProperty="label"
-          valueProperty="value"
-        />
-        <Subtitle>선적지</Subtitle>
-        <DropDownMenu
-          styleName="horizontal"
-          options={pols}
-          selectedOption={selectedPl.length > 0 ? selectedPl[0] : pols[0]}
-          onOptionSelected={select =>
-            this.setState(prevState => {
-              return {
-                ...prevState,
-                queryParams: {
-                  ...prevState.queryParams,
-                  selectedPl: [select]
-                }
-              };
-            })
-          }
-          titleProperty="label"
-          valueProperty="value"
-        />
-        <Subtitle>도착지</Subtitle>
-        <DropDownMenu
-          styleName="horizontal"
-          options={pods}
-          selectedOption={selectedPd.length > 0 ? selectedPd[0] : pods[0]}
-          onOptionSelected={select =>
-            this.setState(prevState => {
-              return {
-                ...prevState,
-                queryParams: {
-                  ...prevState.queryParams,
-                  selectedPd: [select]
-                }
-              };
-            })
-          }
-          titleProperty="label"
-          valueProperty="value"
-        />
-        <Subtitle>Type</Subtitle>
-        <DropDownMenu
-          styleName="horizontal"
-          options={types}
-          selectedOption={selectedTy.length > 0 ? selectedTy[0] : types[0]}
-          onOptionSelected={select =>
-            this.setState(prevState => {
-              return {
-                ...prevState,
-                queryParams: {
-                  ...prevState.queryParams,
-                  selectedTy: [select]
-                }
-              };
-            })
-          }
-          titleProperty="label"
-          valueProperty="value"
-        />
-        <View styleName="horizontal space-between">
-          <Button onPress={() => this._toggleSF()}>
-            <Text>From</Text>
-          </Button>
-          <Button onPress={() => this._toggleST()}>
-            <Text>To</Text>
-          </Button>
+      <View>
+        <View styleName="sm-gutter">
+          <Subtitle>입력자</Subtitle>
+          <AutoComplete
+            options={inputpersons}
+            selected={selectedIp}
+            onSelect={select => this._setSelected(select, "selectedIp")}
+            loadAsync={this._loadInputpersons}
+          />
+          <View styleName="horizontal space-between">
+            <View styleName="flexible">
+              <Subtitle>고객사</Subtitle>
+              <AutoComplete
+                options={clients}
+                selected={selectedCt}
+                onSelect={select => this._setSelected(select, "selectedCt")}
+                loadAsync={this._loadClients}
+              />
+            </View>
+            <View styleName="flexible">
+              <Subtitle>Type</Subtitle>
+              <AutoComplete
+                options={types}
+                selected={selectedTy}
+                onSelect={select => this._setSelected(select, "selectedTy")}
+                loadAsync={this._loadCNTRTypes}
+              />
+            </View>
+          </View>
+
+          <View styleName="horizontal space-between">
+            <View styleName="flexible">
+              <Subtitle>선사</Subtitle>
+              <AutoComplete
+                options={liners}
+                selected={selectedLn}
+                onSelect={select => this._setSelected(select, "selectedLn")}
+                loadAsync={this._loadLiners}
+              />
+            </View>
+            <View styleName="flexible">
+              <Subtitle>선적지</Subtitle>
+              <AsyncComplete
+                selected={selectedPl}
+                onSelect={select => this._setSelected(select, "selectedPl")}
+                loadAsync={this._loadPols}
+              />
+            </View>
+          </View>
+
+          <Subtitle>도착지</Subtitle>
+          <AsyncComplete
+            selected={selectedPd}
+            onSelect={select => this._setSelected(select, "selectedPd")}
+            loadAsync={this._loadPods}
+          />
+          <View styleName="horizontal space-between">
+            <Button
+              onPress={
+                Platform.OS === "ios"
+                  ? () => this._toggleSF()
+                  : async () => {
+                      try {
+                        const {
+                          action,
+                          year,
+                          month,
+                          day
+                        } = await DatePickerAndroid.open({
+                          date: initialSF.toDate()
+                        });
+                        if (action !== DatePickerAndroid.dismissedAction) {
+                          this._setInitialSF(`${year}-${month + 1}-${day}`);
+                        }
+                      } catch ({ code, message }) {
+                        console.warn("Cannot open date picker", message);
+                      }
+                    }
+              }
+            >
+              <Text>From {initialSF.format("MM-DD")}</Text>
+            </Button>
+            <Button
+              onPress={
+                Platform.OS === "ios"
+                  ? () => this._toggleST()
+                  : async () => {
+                      try {
+                        const {
+                          action,
+                          year,
+                          month,
+                          day
+                        } = await DatePickerAndroid.open({
+                          date: initialST.toDate()
+                        });
+                        if (action !== DatePickerAndroid.dismissedAction) {
+                          this._setInitialST(`${year}-${month + 1}-${day}`);
+                        }
+                      } catch ({ code, message }) {
+                        console.warn("Cannot open date picker", message);
+                      }
+                    }
+              }
+            >
+              <Text>To {initialST.format("MM-DD")}</Text>
+            </Button>
+          </View>
+          <Modal
+            animationType="slide"
+            transparent={false}
+            visible={isOpenSF}
+            onRequestClose={() => console.log("Modal closed!")}
+          >
+            {Platform.OS === "ios" ? (
+              <View styleName="fill-parent vertical v-end">
+                <Button onPress={this._toggleSF} styleName="lg-gutter-bottom">
+                  <Icon name="close" />
+                </Button>
+                <DatePickerIOS
+                  mode="date"
+                  date={initialSF.toDate()}
+                  onDateChange={this._setInitialSF}
+                />
+              </View>
+            ) : null}
+          </Modal>
+          <Modal
+            animationType="slide"
+            transparent={false}
+            visible={isOpenST}
+            onRequestClose={() => console.log("Modal closed!")}
+          >
+            {Platform.OS === "ios" ? (
+              <View styleName="fill-parent vertical v-end">
+                <Button onPress={this._toggleST} styleName="lg-gutter-bottom">
+                  <Icon name="close" />
+                </Button>
+                <DatePickerIOS
+                  mode="date"
+                  date={initialST.toDate()}
+                  onDateChange={this._setInitialST}
+                />
+              </View>
+            ) : null}
+          </Modal>
         </View>
-        <Modal animationType="slide" transparent={false} visible={isOpenSF}>
-          {Platform.OS === "ios" ? (
-            <View styleName="fill-parent vertical v-end">
-              <Button onPress={this._toggleSF} styleName="lg-gutter-bottom">
-                <Icon name="close" />
-              </Button>
-              <DatePickerIOS
-                mode="date"
-                date={initialSF.toDate()}
-                onDateChange={this._setInitialSF}
-              />
-            </View>
-          ) : null}
-        </Modal>
-        <Modal animationType="slide" transparent={false} visible={isOpenST}>
-          {Platform.OS === "ios" ? (
-            <View styleName="fill-parent vertical v-end">
-              <Button onPress={this._toggleST} styleName="lg-gutter-bottom">
-                <Icon name="close" />
-              </Button>
-              <DatePickerIOS
-                mode="date"
-                date={initialST.toDate()}
-                onDateChange={this._setInitialST}
-              />
-            </View>
-          ) : null}
-        </Modal>
         <Button
           styleName="secondary xl-gutter-vertical"
           onPress={() => this._handleSearch()}

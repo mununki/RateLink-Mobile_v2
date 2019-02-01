@@ -7,7 +7,14 @@ import { Text } from "@shoutem/ui";
 class AddContainer extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      headerTitle: "추가"
+      headerTitle: "추가",
+      headerStyle: {
+        backgroundColor: "#6dbad8"
+      },
+      headerTintColor: "#fff",
+      headerTitleStyle: {
+        fontWeight: "bold"
+      }
     };
   };
   render() {

@@ -1,6 +1,14 @@
 import React from "react";
-import { Image, TouchableWithoutFeedback } from "react-native";
-import { Text, Icon, Caption, Overlay, Button, View } from "@shoutem/ui";
+import { Image } from "react-native";
+import {
+  Text,
+  Icon,
+  Caption,
+  Overlay,
+  Button,
+  View,
+  TouchableOpacity
+} from "@shoutem/ui";
 import PropTypes from "prop-types";
 import { getAWSS3Url } from "../env.config";
 import styled from "styled-components/native";
@@ -18,6 +26,8 @@ const RateCardContainer = styled.View`
   padding: 10px;
   margin: 7px 0 0 0;
   border: 1px solid #eee;
+  background-color: #fff;
+  border-radius: 5px;
 `;
 
 const AvatarRow = styled.View`
@@ -142,6 +152,51 @@ class RateCard extends React.Component {
       });
   };
 
+  _handleDelete = () => {
+    const { rate } = this.props;
+    this.props.client
+      .mutate({
+        mutation: SET_RATE,
+        variables: {
+          rateId: rate.id,
+          handler: "delete"
+        }
+      })
+      .then(res => {
+        const { queryParams } = this.props.client.readQuery({
+          query: GET_QUERYPARAMS
+        });
+        const { getRates } = this.props.client.readQuery({
+          query: GET_RATES,
+          variables: {
+            first: 20,
+            queryParams: JSON.stringify(queryParams),
+            after: null
+          }
+        });
+        const newRatesInCache = getRates.data.edges.filter(
+          edge => edge.node.id !== res.data.setRate[0].id
+        );
+        this.props.client.writeQuery({
+          query: GET_RATES,
+          variables: {
+            first: 20,
+            queryParams: JSON.stringify(queryParams),
+            after: null
+          },
+          data: {
+            getRates: {
+              ...getRates,
+              data: {
+                ...getRates.data,
+                edges: newRatesInCache
+              }
+            }
+          }
+        });
+      });
+  };
+
   render() {
     const {
       rate,
@@ -151,11 +206,11 @@ class RateCard extends React.Component {
     } = this.props;
     const { isOverlayed } = this.state;
     return (
-      <TouchableWithoutFeedback
+      <TouchableOpacity
         ref={node => (this.rateCard = node)}
         onPress={() => {
           // check if this is touched when other rateCards in the parent view are touched
-          if (currentlyOverlayed !== this.rateCard) {
+          if (currentlyOverlayed && currentlyOverlayed !== this.rateCard) {
             // if other rateCard is touched, then disable the overlay
             currentlyOverlayedResolveMethod(false);
           }
@@ -174,7 +229,7 @@ class RateCard extends React.Component {
           this._toggleOverlay(true);
         }}
       >
-        <RateCardContainer>
+        <RateCardContainer style={{ elevation: 3 }}>
           <AvatarRow>
             <Avatar>
               <Image
@@ -188,17 +243,17 @@ class RateCard extends React.Component {
                     : require("../assets/profile_images/dummy.png")
                 }
                 style={{
-                  resizeMode: "contain",
                   width: 30,
                   height: 30,
                   marginTop: -15,
                   borderRadius: 15
                 }}
               />
-              <Text style={{ marginLeft: 5 }}>
+              <Caption style={{ marginLeft: 5 }}>
                 {rate.inputperson.profile.profile_name}
-              </Text>
+              </Caption>
             </Avatar>
+            <Text>{rate.client.name}</Text>
 
             <Validty>
               <Text style={{ fontSize: 12, color: "#aaa", marginRight: 5 }}>
@@ -237,6 +292,7 @@ class RateCard extends React.Component {
               <Text>{rate.buying40}</Text>
               <Text>{rate.buying4H}</Text>
             </Buying>
+            <Icon name="play" style={{ color: "#eee" }} />
             <Selling>
               <Text>{rate.selling20}</Text>
               <Text>{rate.selling40}</Text>
@@ -271,14 +327,23 @@ class RateCard extends React.Component {
                 >
                   <Text>수정</Text>
                 </Button>
-                <Button styleName="lg-gutter-horizontal">
+                <Button
+                  styleName="lg-gutter-horizontal"
+                  onPress={() => {
+                    _updateParentState({
+                      currentlyOverlayed: null,
+                      currentlyOverlayedResolveMethod: null
+                    });
+                    this._handleDelete();
+                  }}
+                >
                   <Text>삭제</Text>
                 </Button>
               </View>
             </Overlay>
           ) : null}
         </RateCardContainer>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     );
   }
 }

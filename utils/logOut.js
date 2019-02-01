@@ -1,11 +1,11 @@
-import { removeTokenFromAsyncStorage } from "../../../utils/handleAsyncStorage";
+import { removeTokenFromAsyncStorage } from "./handleAsyncStorage";
 
-_logOut = navigation => async () => {
+export const logOut = navigation => async () => {
   let res;
   try {
     res = await removeTokenFromAsyncStorage();
   } catch (err) {
-    console.log(err);
+    console.warn(err);
     alert("로그아웃 실패");
   }
   if (res) {

@@ -19,5 +19,10 @@
 - [x] Control the status of children items in ScrollView
 - [x] Rate Modify
 - [x] Rate Duplicate
-- [ ] Rate Delete
+- [x] Rate Delete
+- [x] ReadMore (fetchMore)
+- [ ] Pull to Refresh
+- [ ] Profile update
+- [ ] Friend management
+- [ ] Rate Chart
 - [ ] Styling

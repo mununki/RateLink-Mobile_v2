@@ -1,25 +1,40 @@
 import React from "react";
-import { View, Text, Button, TextInput } from "react-native";
+import { View, Text, Button, TextInput, Subtitle } from "@shoutem/ui";
 import { withNavigation } from "react-navigation";
 
 class LogInPresenter extends React.Component {
   render() {
     return (
-      <View>
-        <Text>LogIn Screen</Text>
-        <TextInput
-          placeholder="Email"
-          onChangeText={text => this.props.handleChange(text, "email")}
-        />
-        <TextInput
-          placeholder="Password"
-          onChangeText={text => this.props.handleChange(text, "password")}
-        />
-        <Button title="로그인" onPress={() => this.props.handleSubmit()} />
+      <View styleName="flexible vertical" style={{ backgroundColor: "#eee" }}>
+        <View styleName="md-gutter" style={{ marginTop: 100 }}>
+          <TextInput
+            autoFocus={true}
+            autoComplete="off"
+            autoCapitalize="none"
+            autoCorrect={false}
+            styleName="sm-gutter"
+            placeholder="Email"
+            onChangeText={text => this.props.handleChange(text, "email")}
+          />
+          <TextInput
+            secureTextEntry={true}
+            styleName="sm-gutter"
+            placeholder="Password"
+            onChangeText={text => this.props.handleChange(text, "password")}
+          />
+        </View>
         <Button
-          title="회원가입"
+          styleName="action sm-gutter secondary"
+          onPress={() => this.props.handleSubmit()}
+        >
+          <Text>로그인</Text>
+        </Button>
+        <Button
+          styleName="action sm-gutter"
           onPress={() => this.props.navigation.navigate("SignUp")}
-        />
+        >
+          <Text>회원가입</Text>
+        </Button>
       </View>
     );
   }

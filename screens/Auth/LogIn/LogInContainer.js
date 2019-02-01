@@ -2,12 +2,21 @@ import React from "react";
 import LogInPresenter from "./LoginPresenter";
 import { withApollo } from "react-apollo";
 import { LOGIN } from "./LoginQueries";
-import {
-  saveTokenToAsyncStorage,
-  removeTokenFromAsyncStorage
-} from "../../../utils/handleAsyncStorage";
+import { saveTokenToAsyncStorage } from "../../../utils/handleAsyncStorage";
 
 class LogInContainer extends React.Component {
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerTitle: "로그인",
+      headerStyle: {
+        backgroundColor: "#6dbad8"
+      },
+      headerTintColor: "#fff",
+      headerTitleStyle: {
+        fontWeight: "bold"
+      }
+    };
+  };
   state = {
     email: "",
     password: ""
