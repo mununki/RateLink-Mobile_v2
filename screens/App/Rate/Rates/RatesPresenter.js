@@ -6,6 +6,7 @@ import { withNavigation } from "react-navigation";
 import { withApollo } from "react-apollo";
 import { SET_MODE, GET_QUERYPARAMS } from "../../../../lib/clientQueries";
 import { GET_RATES } from "./RatesQueries";
+import RateReadMore from "../../../../components/RateReadMore";
 
 class RatesPresenter extends React.Component {
   state = {
@@ -19,78 +20,38 @@ class RatesPresenter extends React.Component {
     this.setState(newState);
   };
 
-  _getMoreRates = () => {
-    const { rates } = this.props;
-    const { queryParams } = this.props.client.readQuery({
+  _onRefresh = async () => {
+    this.setState({ refreshing: true });
+    const { queryParams } = await this.props.client.readQuery({
       query: GET_QUERYPARAMS
     });
-    this.props
-      .fetchMore({
+    this.props.client
+      .query({
         query: GET_RATES,
         variables: {
           first: 20,
           queryParams: JSON.stringify(queryParams),
-          after: rates.pageInfo.endCursor
-        },
-        updateQuery: (previousResult, { fetchMoreResult }) => {
-          if (!fetchMoreResult.getRates.data.pageInfo.hasNextPage)
-            console.log("마지막 페이지 입니다.");
-          return fetchMoreResult.getRates.data.edges.length > 0
-            ? {
-                getRates: {
-                  ok: true,
-                  data: {
-                    pageInfo: fetchMoreResult.getRates.data.pageInfo,
-                    edges: [
-                      ...previousResult.getRates.data.edges,
-                      ...fetchMoreResult.getRates.data.edges
-                    ],
-                    __typename: "Rate_rateConnection"
-                  },
-                  error: null,
-                  __typename: "RateResponse"
-                }
-              }
-            : previousResult;
+          after: null
         }
       })
-      .then(res => this.setState({ isGetMoreRates: false }));
-  };
-
-  _onRefresh = () => {
-    this.setState({ refreshing: true });
-    this.props.client
-      .query({
-        query: GET_QUERYPARAMS
-      })
       .then(res => {
-        const { queryParams } = res;
-        this.props.client
-          .query({
-            query: GET_RATES,
-            variables: {
-              first: 20,
-              queryParams: JSON.stringify(queryParams),
-              after: null
-            }
-          })
-          .then(res => {
-            this.setState({ refreshing: false });
-            console.log("refreshed!");
-          });
+        this.setState({ refreshing: false });
+        console.log("refreshed!");
       });
   };
 
   render() {
-    const { rates } = this.props;
+    const { rates, fetchMore } = this.props;
     const {
       currentlyOverlayed,
       currentlyOverlayedResolveMethod,
       isGetMoreRates,
       refreshing
     } = this.state;
+    rates.edges.map(edge => console.log(edge.node.id));
+    console.log("============");
     return (
-      <View style={{ backgroundColor: "#eee" }}>
+      <View styleName="flexible" style={{ backgroundColor: "#eee" }}>
         <ScrollView
           onScroll={({ nativeEvent }) => {
             if (currentlyOverlayed) {
@@ -125,24 +86,7 @@ class RatesPresenter extends React.Component {
               _updateParentState={this._updateParentState}
             />
           ))}
-          {isGetMoreRates ? (
-            <Button styleName="secondary md-gutter-vertical">
-              <Spinner
-                style={{ color: "#fff", marginTop: 10, marginBottom: 10 }}
-              />
-            </Button>
-          ) : (
-            <Button
-              onPress={() => {
-                this.setState({ isGetMoreRates: true });
-                this._getMoreRates();
-              }}
-              styleName="secondary md-gutter-vertical"
-              style={{ paddingTop: 5, paddingBottom: 5 }}
-            >
-              <Text>Read More</Text>
-            </Button>
-          )}
+          <RateReadMore rates={rates} fetchMore={fetchMore} />
         </ScrollView>
 
         <Button

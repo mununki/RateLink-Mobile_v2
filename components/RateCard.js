@@ -22,12 +22,12 @@ import { GET_RATES } from "../screens/App/Rate/Rates/RatesQueries";
 const AWS_S3_ENDPOINT = getAWSS3Url();
 
 const RateCardContainer = styled.View`
-  flex: 1;
   padding: 10px;
   margin: 7px 0 0 0;
   border: 1px solid #eee;
   background-color: #fff;
   border-radius: 5px;
+  height: 170px;
 `;
 
 const AvatarRow = styled.View`
