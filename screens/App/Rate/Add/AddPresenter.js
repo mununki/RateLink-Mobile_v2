@@ -520,7 +520,6 @@ class AddPresenter extends React.Component {
           <Caption>Buying</Caption>
           <View styleName="horizontal space-between">
             <TextInput
-              autoFocus={true}
               autoComplete="off"
               autoCapitalize="none"
               autoCorrect={false}
@@ -531,7 +530,6 @@ class AddPresenter extends React.Component {
               style={{ borderWidth: 1, borderColor: "#eee" }}
             />
             <TextInput
-              autoFocus={true}
               autoComplete="off"
               autoCapitalize="none"
               autoCorrect={false}
@@ -542,7 +540,6 @@ class AddPresenter extends React.Component {
               style={{ borderWidth: 1, borderColor: "#eee" }}
             />
             <TextInput
-              autoFocus={true}
               autoComplete="off"
               autoCapitalize="none"
               autoCorrect={false}
@@ -556,7 +553,6 @@ class AddPresenter extends React.Component {
           <Caption>Selling</Caption>
           <View styleName="horizontal space-between">
             <TextInput
-              autoFocus={true}
               autoComplete="off"
               autoCapitalize="none"
               autoCorrect={false}
@@ -567,7 +563,6 @@ class AddPresenter extends React.Component {
               style={{ borderWidth: 1, borderColor: "#eee" }}
             />
             <TextInput
-              autoFocus={true}
               autoComplete="off"
               autoCapitalize="none"
               autoCorrect={false}
@@ -578,7 +573,6 @@ class AddPresenter extends React.Component {
               style={{ borderWidth: 1, borderColor: "#eee" }}
             />
             <TextInput
-              autoFocus={true}
               autoComplete="off"
               autoCapitalize="none"
               autoCorrect={false}
@@ -592,7 +586,6 @@ class AddPresenter extends React.Component {
           <Caption>REMARK</Caption>
           <View styleName="horizontal">
             <TextInput
-              autoFocus={true}
               autoComplete="off"
               autoCapitalize="none"
               autoCorrect={false}

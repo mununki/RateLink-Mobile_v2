@@ -98,7 +98,6 @@ class AsyncComplete extends React.Component {
                 <Text>{options.length}개 찾음</Text>
               </View>
               <TextInput
-                autoFocus={true}
                 autoComplete="off"
                 autoCapitalize="none"
                 autoCorrect={false}
