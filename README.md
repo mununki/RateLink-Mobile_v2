@@ -21,7 +21,7 @@
 - [x] Rate Duplicate
 - [x] Rate Delete
 - [x] ReadMore (fetchMore)
-- [ ] Pull to Refresh
+- [x] Pull to Refresh
 - [ ] Profile update
 - [ ] Friend management
 - [ ] Rate Chart
