@@ -32,7 +32,8 @@ class RatesPresenter extends React.Component {
           first: 20,
           queryParams: JSON.stringify(queryParams),
           after: null
-        }
+        },
+        fetchPolicy: "network-only"
       })
       .then(res => {
         this.setState({ refreshing: false });
@@ -48,8 +49,7 @@ class RatesPresenter extends React.Component {
       isGetMoreRates,
       refreshing
     } = this.state;
-    rates.edges.map(edge => console.log(edge.node.id));
-    console.log("============");
+
     return (
       <View styleName="flexible" style={{ backgroundColor: "#eee" }}>
         <ScrollView
