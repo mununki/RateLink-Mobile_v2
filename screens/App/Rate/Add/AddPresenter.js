@@ -3,7 +3,8 @@ import {
   DatePickerAndroid,
   Modal,
   DatePickerIOS,
-  Platform
+  Platform,
+  Keyboard
 } from "react-native";
 import {
   View,
@@ -31,12 +32,14 @@ import {
   AutoComplete,
   AsyncComplete
 } from "../../../../components/AutoComplete";
+import { NavigationEvents } from "react-navigation";
 
 class AddPresenter extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      isKeyboardShow: false,
       isOpenSF: false,
       isOpenST: false,
       options: {
@@ -388,9 +391,18 @@ class AddPresenter extends React.Component {
     });
   };
 
+  _keyboardDidShow = () => {
+    this.setState({ isKeyboardShow: true });
+  };
+
+  _keyboardDidHide = () => {
+    this.setState({ isKeyboardShow: false });
+  };
+
   render() {
     const { rate } = this.props;
     const {
+      isKeyboardShow,
       isOpenSF,
       isOpenST,
       options: { clients, liners, types },
@@ -416,54 +428,134 @@ class AddPresenter extends React.Component {
 
     return (
       <View>
+        <NavigationEvents
+          onDidFocus={() => {
+            this.keyboardDidShowListener = Keyboard.addListener(
+              "keyboardDidShow",
+              this._keyboardDidShow
+            );
+            this.keyboardDidHideListener = Keyboard.addListener(
+              "keyboardDidHide",
+              this._keyboardDidHide
+            );
+          }}
+          onWillBlur={() => {
+            this.keyboardDidShowListener.remove();
+            this.keyboardDidHideListener.remove();
+          }}
+        />
         <View styleName="sm-gutter">
-          <View styleName="horizontal space-between">
-            <View styleName="flexible">
-              <Subtitle>고객사</Subtitle>
-              <AutoComplete
-                options={clients}
-                selected={selectedCt}
-                onSelect={select => this._setSelected(select, "selectedCt")}
-                loadAsync={this._loadClients}
-              />
+          <View
+            style={isKeyboardShow ? { height: 0, overflow: "hidden" } : null}
+          >
+            <View styleName="horizontal space-between">
+              <View styleName="flexible">
+                <Subtitle>업체명</Subtitle>
+                <AutoComplete
+                  options={clients}
+                  selected={selectedCt}
+                  onSelect={select => this._setSelected(select, "selectedCt")}
+                  loadAsync={this._loadClients}
+                />
+              </View>
+              <View styleName="flexible">
+                <Subtitle>Type</Subtitle>
+                <AutoComplete
+                  options={types}
+                  selected={selectedTy}
+                  onSelect={select => this._setSelected(select, "selectedTy")}
+                  loadAsync={this._loadCNTRTypes}
+                />
+              </View>
             </View>
-            <View styleName="flexible">
-              <Subtitle>Type</Subtitle>
-              <AutoComplete
-                options={types}
-                selected={selectedTy}
-                onSelect={select => this._setSelected(select, "selectedTy")}
-                loadAsync={this._loadCNTRTypes}
-              />
+
+            <View styleName="horizontal space-between">
+              <View styleName="flexible">
+                <Subtitle>선사</Subtitle>
+                <AutoComplete
+                  options={liners}
+                  selected={selectedLn}
+                  onSelect={select => this._setSelected(select, "selectedLn")}
+                  loadAsync={this._loadLiners}
+                />
+              </View>
+              <View styleName="flexible">
+                <Subtitle>선적지</Subtitle>
+                <AsyncComplete
+                  selected={selectedPl}
+                  onSelect={select => this._setSelected(select, "selectedPl")}
+                  loadAsync={this._loadPols}
+                />
+              </View>
             </View>
+
+            <Subtitle>도착지</Subtitle>
+            <AsyncComplete
+              selected={selectedPd}
+              onSelect={select => this._setSelected(select, "selectedPd")}
+              loadAsync={this._loadPods}
+            />
           </View>
 
-          <View styleName="horizontal space-between">
-            <View styleName="flexible">
-              <Subtitle>선사</Subtitle>
-              <AutoComplete
-                options={liners}
-                selected={selectedLn}
-                onSelect={select => this._setSelected(select, "selectedLn")}
-                loadAsync={this._loadLiners}
-              />
+          {!isKeyboardShow ? null : (
+            <View styleName="horizontal space-between wrap md-gutter-vertical">
+              {selectedCt[0] ? (
+                <View styleName="horizontal">
+                  <Icon name="checkbox-on" style={{ color: "#27ae60" }} />
+                  <Text>{selectedCt[0].label}</Text>
+                </View>
+              ) : (
+                <View styleName="horizontal">
+                  <Icon name="clear-text" style={{ color: "#c0392b" }} />
+                  <Text>업체명</Text>
+                </View>
+              )}
+              {selectedTy[0] ? (
+                <View styleName="horizontal">
+                  <Icon name="checkbox-on" style={{ color: "#27ae60" }} />
+                  <Text>{selectedTy[0].label}</Text>
+                </View>
+              ) : (
+                <View styleName="horizontal">
+                  <Icon name="clear-text" style={{ color: "#c0392b" }} />
+                  <Text>Type</Text>
+                </View>
+              )}
+              {selectedLn[0] ? (
+                <View styleName="horizontal">
+                  <Icon name="checkbox-on" style={{ color: "#27ae60" }} />
+                  <Text>{selectedLn[0].label}</Text>
+                </View>
+              ) : (
+                <View styleName="horizontal">
+                  <Icon name="clear-text" style={{ color: "#c0392b" }} />
+                  <Text>선사</Text>
+                </View>
+              )}
+              {selectedPl[0] ? (
+                <View styleName="horizontal">
+                  <Icon name="checkbox-on" style={{ color: "#27ae60" }} />
+                  <Text>{selectedPl[0].label}</Text>
+                </View>
+              ) : (
+                <View styleName="horizontal">
+                  <Icon name="clear-text" style={{ color: "#c0392b" }} />
+                  <Text>선적지</Text>
+                </View>
+              )}
+              {selectedPd[0] ? (
+                <View styleName="horizontal">
+                  <Icon name="checkbox-on" style={{ color: "#27ae60" }} />
+                  <Text>{selectedPd[0].label}</Text>
+                </View>
+              ) : (
+                <View styleName="horizontal">
+                  <Icon name="clear-text" style={{ color: "#c0392b" }} />
+                  <Text>도착지</Text>
+                </View>
+              )}
             </View>
-            <View styleName="flexible">
-              <Subtitle>선적지</Subtitle>
-              <AsyncComplete
-                selected={selectedPl}
-                onSelect={select => this._setSelected(select, "selectedPl")}
-                loadAsync={this._loadPols}
-              />
-            </View>
-          </View>
-
-          <Subtitle>도착지</Subtitle>
-          <AsyncComplete
-            selected={selectedPd}
-            onSelect={select => this._setSelected(select, "selectedPd")}
-            loadAsync={this._loadPods}
-          />
+          )}
 
           <View styleName="horizontal space-between">
             <Button
