@@ -1,20 +1,32 @@
 import React from "react";
 import RateCard from "../../../../components/RateCard";
-import { ScrollView, RefreshControl } from "react-native";
-import { Button, Icon, Text, View, Overlay, Spinner } from "@shoutem/ui";
+import {
+  ScrollView,
+  RefreshControl,
+  BackHandler,
+  ToastAndroid
+} from "react-native";
+import { Button, Icon, Text, View, Overlay } from "@shoutem/ui";
 import { withNavigation } from "react-navigation";
 import { withApollo } from "react-apollo";
 import { SET_MODE, GET_QUERYPARAMS } from "../../../../lib/clientQueries";
 import { GET_RATES } from "./RatesQueries";
 import RateReadMore from "../../../../components/RateReadMore";
+import { NavigationEvents } from "react-navigation";
 
 class RatesPresenter extends React.Component {
   state = {
     currentlyOverlayed: null,
     currentlyOverlayedResolveMethod: null,
-    isGetMoreRates: false,
     refreshing: false
   };
+
+  componentDidMount() {
+    this.backHandlerListener = BackHandler.addEventListener(
+      "hardwareBackPress",
+      this._handleBackPress
+    );
+  }
 
   _updateParentState = newState => {
     this.setState(newState);
@@ -37,8 +49,24 @@ class RatesPresenter extends React.Component {
       })
       .then(res => {
         this.setState({ refreshing: false });
-        console.log("refreshed!");
       });
+  };
+
+  counterAppExit = 0;
+
+  _handleBackPress = () => {
+    if (this.counterAppExit === 1) {
+      return false;
+    }
+    this.counterAppExit = 1;
+    ToastAndroid.show(
+      "뒤로가기 버튼을 빠르게 다시 누르면 종료 됩니다.",
+      ToastAndroid.SHORT
+    );
+    setTimeout(() => {
+      this.counterAppExit = 0;
+    }, 1000);
+    return true; // Do not exit app
   };
 
   render() {
@@ -46,28 +74,27 @@ class RatesPresenter extends React.Component {
     const {
       currentlyOverlayed,
       currentlyOverlayedResolveMethod,
-      isGetMoreRates,
       refreshing
     } = this.state;
 
     return (
       <View styleName="flexible" style={{ backgroundColor: "#eee" }}>
+        <NavigationEvents
+          onDidFocus={() => {
+            this.backHandlerListener = BackHandler.addEventListener(
+              "hardwareBackPress",
+              this._handleBackPress
+            );
+          }}
+          onWillBlur={() => {
+            this.backHandlerListener.remove();
+          }}
+        />
         <ScrollView
           onScroll={({ nativeEvent }) => {
             if (currentlyOverlayed) {
               currentlyOverlayedResolveMethod(false);
             }
-            // ====================================================
-            // Infinite Scroll
-            // ====================================================
-            // const endOfScrollY = nativeEvent.contentSize.height;
-            // const scrollOffsetY =
-            //   nativeEvent.layoutMeasurement.height +
-            //   nativeEvent.contentOffset.y;
-            // if (endOfScrollY === scrollOffsetY) {
-            //   this._getMoreRates();
-            //   this.setState({ isGetMoreRates: true });
-            // }
           }}
           scrollEventThrottle={320}
           refreshControl={
