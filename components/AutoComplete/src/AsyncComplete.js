@@ -53,23 +53,25 @@ class AsyncComplete extends React.Component {
             </Subtitle>
             <Icon name="drop-down" />
           </Button>
-          <TouchableOpacity
-            onPress={() => onSelect()}
-            style={{
-              position: "absolute",
-              right: 0,
-              paddingLeft: 10,
-              paddingRight: 10
-            }}
-          >
-            <Icon name="close" style={{ color: "#ccc" }} />
-          </TouchableOpacity>
+          {selected.length > 0 ? (
+            <TouchableOpacity
+              onPress={() => onSelect()}
+              style={{
+                position: "absolute",
+                right: 0,
+                paddingLeft: 10,
+                paddingRight: 10
+              }}
+            >
+              <Icon name="close" style={{ color: "#ccc" }} />
+            </TouchableOpacity>
+          ) : null}
         </View>
         <Modal
           visible={isOpen}
           animationType="slide"
           transparent={true}
-          onRequestClose={() => console.log("Modal closed!")}
+          onRequestClose={() => this.setState({ isOpen: false })}
         >
           <NativeView
             style={{
@@ -98,6 +100,7 @@ class AsyncComplete extends React.Component {
                 <Text>{options.length}개 찾음</Text>
               </View>
               <TextInput
+                autoFocus={true}
                 autoComplete="off"
                 autoCapitalize="none"
                 autoCorrect={false}
