@@ -40,23 +40,25 @@ class AutoComplete extends React.Component {
             </Subtitle>
             <Icon name="drop-down" />
           </Button>
-          <TouchableOpacity
-            onPress={() => onSelect()}
-            style={{
-              position: "absolute",
-              right: 0,
-              paddingLeft: 10,
-              paddingRight: 10
-            }}
-          >
-            <Icon name="close" style={{ color: "#ccc" }} />
-          </TouchableOpacity>
+          {selected.length > 0 ? (
+            <TouchableOpacity
+              onPress={() => onSelect()}
+              style={{
+                position: "absolute",
+                right: 0,
+                paddingLeft: 10,
+                paddingRight: 10
+              }}
+            >
+              <Icon name="close" style={{ color: "#ccc" }} />
+            </TouchableOpacity>
+          ) : null}
         </View>
         <Modal
           visible={isOpen}
           animationType="slide"
           transparent={false}
-          onRequestClose={() => console.log("Modal closed!")}
+          onRequestClose={() => this.setState({ isOpen: false })}
         >
           <View
             style={{
