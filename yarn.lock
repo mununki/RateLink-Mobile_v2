@@ -4358,6 +4358,11 @@ react-native-scroller@0.0.6:
   resolved "https://registry.yarnpkg.com/react-native-scroller/-/react-native-scroller-0.0.6.tgz#dea8c89bd1ca2d2445fbb6b3a90960df6c1767ff"
   integrity sha1-3qjIm9HKLSRF+7azqQlg32wXZ/8=
 
+react-native-simple-toast@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/react-native-simple-toast/-/react-native-simple-toast-0.0.8.tgz#513f4add8d30e4c5109e536bfc6ea5825fea5d83"
+  integrity sha512-qfhHsAtZuMV7llF74WjAHCjAQhfyDDRVrE9nmczCZSHZ5JRZ3XkqnZ8IyNnNUQMsGQodyV+0QEf5uPiWBICnUA==
+
 react-native-svg@8.0.10:
   version "8.0.10"
   resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-8.0.10.tgz#b07e2342d1486220f5fda1a584e316e7d2d1f392"
