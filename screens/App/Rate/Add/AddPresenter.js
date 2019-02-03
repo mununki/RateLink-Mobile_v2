@@ -13,7 +13,8 @@ import {
   Subtitle,
   Icon,
   TextInput,
-  Caption
+  Caption,
+  Spinner
 } from "@shoutem/ui";
 import { ME } from "../../../../queries/sharedQueries";
 import dayjs from "dayjs";
@@ -33,6 +34,8 @@ import {
   AsyncComplete
 } from "../../../../components/AutoComplete";
 import { NavigationEvents } from "react-navigation";
+import checkMutationValidity from "../../../../utils/checkMutationValidity";
+import { ToastAndroid } from "react-native";
 
 class AddPresenter extends React.Component {
   constructor(props) {
@@ -42,6 +45,7 @@ class AddPresenter extends React.Component {
       isKeyboardShow: false,
       isOpenSF: false,
       isOpenST: false,
+      isSaving: false,
       options: {
         inputpersons: [],
         clients: [],
@@ -51,7 +55,6 @@ class AddPresenter extends React.Component {
         types: []
       },
       newRate: {
-        selectedIp: [],
         selectedCt: [],
         selectedLn: [],
         selectedPl: [],
@@ -313,6 +316,11 @@ class AddPresenter extends React.Component {
 
   _handleSave = () => {
     const { newRate } = this.state;
+    if (!checkMutationValidity(newRate)) {
+      ToastAndroid.show("필수 정보를 입력해주세요.", ToastAndroid.SHORT);
+      return false;
+    }
+    this.setState({ isSaving: true });
     this.props.client
       .mutate({
         mutation: SET_RATE,
@@ -361,12 +369,24 @@ class AddPresenter extends React.Component {
           }
         });
       })
-      .then(() => this.props.navigation.navigate("Rates"));
+      .then(() => {
+        this.setState({ isSaving: false });
+        if (Platform.OS === "ios") {
+        } else {
+          ToastAndroid.show("입력 완료!", ToastAndroid.SHORT);
+        }
+        this.props.navigation.navigate("Rates");
+      });
   };
 
   _handleModify = () => {
     const { rate } = this.props;
     const { newRate } = this.state;
+    if (!checkMutationValidity(newRate)) {
+      ToastAndroid.show("필수 정보를 입력해주세요.", ToastAndroid.SHORT);
+      return false;
+    }
+    this.setState({ isSaving: true });
     this.props.client
       .mutate({
         mutation: SET_RATE,
@@ -376,7 +396,14 @@ class AddPresenter extends React.Component {
           rateId: rate.id
         }
       })
-      .then(() => this.props.navigation.navigate("Rates"));
+      .then(() => {
+        this.setState({ isSaving: false });
+        if (Platform.OS === "ios") {
+        } else {
+          ToastAndroid.show("수정 완료!", ToastAndroid.SHORT);
+        }
+        this.props.navigation.navigate("Rates");
+      });
   };
 
   _setSelected = (select, target) => {
@@ -405,6 +432,7 @@ class AddPresenter extends React.Component {
       isKeyboardShow,
       isOpenSF,
       isOpenST,
+      isSaving,
       options: { clients, liners, types },
       newRate: {
         selectedCt,
@@ -612,6 +640,7 @@ class AddPresenter extends React.Component {
           <Caption>Buying</Caption>
           <View styleName="horizontal space-between">
             <TextInput
+              keyboardType="numeric"
               autoComplete="off"
               autoCapitalize="none"
               autoCorrect={false}
@@ -622,6 +651,7 @@ class AddPresenter extends React.Component {
               style={{ borderWidth: 1, borderColor: "#eee" }}
             />
             <TextInput
+              keyboardType="numeric"
               autoComplete="off"
               autoCapitalize="none"
               autoCorrect={false}
@@ -632,6 +662,7 @@ class AddPresenter extends React.Component {
               style={{ borderWidth: 1, borderColor: "#eee" }}
             />
             <TextInput
+              keyboardType="numeric"
               autoComplete="off"
               autoCapitalize="none"
               autoCorrect={false}
@@ -645,6 +676,7 @@ class AddPresenter extends React.Component {
           <Caption>Selling</Caption>
           <View styleName="horizontal space-between">
             <TextInput
+              keyboardType="numeric"
               autoComplete="off"
               autoCapitalize="none"
               autoCorrect={false}
@@ -655,6 +687,7 @@ class AddPresenter extends React.Component {
               style={{ borderWidth: 1, borderColor: "#eee" }}
             />
             <TextInput
+              keyboardType="numeric"
               autoComplete="off"
               autoCapitalize="none"
               autoCorrect={false}
@@ -665,6 +698,7 @@ class AddPresenter extends React.Component {
               style={{ borderWidth: 1, borderColor: "#eee" }}
             />
             <TextInput
+              keyboardType="numeric"
               autoComplete="off"
               autoCapitalize="none"
               autoCorrect={false}
@@ -696,7 +730,11 @@ class AddPresenter extends React.Component {
             !rate ? () => this._handleSave() : () => this._handleModify()
           }
         >
-          <Text>SAVE</Text>
+          {isSaving ? (
+            <Spinner styleName="md-gutter-vertical" />
+          ) : (
+            <Text>SAVE</Text>
+          )}
         </Button>
         <Modal
           animationType="slide"
