@@ -6,3 +6,7 @@ npm-debug.*
 *.key
 *.mobileprovision
 env.config.js
+ios/
+android/
+app.json
+yarn.lock

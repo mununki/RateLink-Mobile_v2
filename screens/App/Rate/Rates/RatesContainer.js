@@ -9,7 +9,7 @@ import {
   Caption,
   Spinner
 } from "@shoutem/ui";
-import { Query, Mutation, withApollo } from "react-apollo";
+import { Query, withApollo } from "react-apollo";
 import RatesPresenter from "./RatesPresenter";
 import { GET_RATES } from "./RatesQueries";
 import {

@@ -8,6 +8,7 @@ class LogInPresenter extends React.Component {
       <View styleName="flexible vertical" style={{ backgroundColor: "#eee" }}>
         <View styleName="md-gutter" style={{ marginTop: 100 }}>
           <TextInput
+            keyboardType="email-address"
             autoFocus={true}
             autoComplete="off"
             autoCapitalize="none"

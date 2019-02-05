@@ -315,7 +315,7 @@ class SearchPresenter extends React.Component {
           />
           <View styleName="horizontal space-between">
             <View styleName="flexible">
-              <Subtitle>고객사</Subtitle>
+              <Subtitle>업체명</Subtitle>
               <AutoComplete
                 options={clients}
                 selected={selectedCt}
@@ -454,6 +454,7 @@ class SearchPresenter extends React.Component {
         <Button
           styleName="secondary xl-gutter-vertical"
           onPress={() => this._handleSearch()}
+          style={{ paddingTop: 5, paddingBottom: 5 }}
         >
           <Icon name="search" />
           <Text>SEARCH</Text>
