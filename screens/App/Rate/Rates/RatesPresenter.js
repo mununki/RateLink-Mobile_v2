@@ -1,11 +1,6 @@
 import React from "react";
 import RateCard from "../../../../components/RateCard";
-import {
-  ScrollView,
-  RefreshControl,
-  BackHandler,
-  ToastAndroid
-} from "react-native";
+import { ScrollView, RefreshControl, BackHandler } from "react-native";
 import { Button, Icon, Text, View, Overlay } from "@shoutem/ui";
 import { withNavigation } from "react-navigation";
 import { withApollo } from "react-apollo";
@@ -13,6 +8,7 @@ import { SET_MODE, GET_QUERYPARAMS } from "../../../../lib/clientQueries";
 import { GET_RATES } from "./RatesQueries";
 import RateReadMore from "../../../../components/RateReadMore";
 import { NavigationEvents } from "react-navigation";
+import Toast from "react-native-simple-toast";
 
 class RatesPresenter extends React.Component {
   state = {
@@ -59,10 +55,7 @@ class RatesPresenter extends React.Component {
       return false;
     }
     this.counterAppExit = 1;
-    ToastAndroid.show(
-      "뒤로가기 버튼을 빠르게 다시 누르면 종료 됩니다.",
-      ToastAndroid.SHORT
-    );
+    Toast.show("뒤로가기 버튼을 빠르게 다시 누르면 종료 됩니다.", Toast.SHORT);
     setTimeout(() => {
       this.counterAppExit = 0;
     }, 1000);

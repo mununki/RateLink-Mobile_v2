@@ -35,7 +35,7 @@ import {
 } from "../../../../components/AutoComplete";
 import { NavigationEvents } from "react-navigation";
 import checkMutationValidity from "../../../../utils/checkMutationValidity";
-import { ToastAndroid } from "react-native";
+import Toast from "react-native-simple-toast";
 
 class AddPresenter extends React.Component {
   constructor(props) {
@@ -317,7 +317,7 @@ class AddPresenter extends React.Component {
   _handleSave = () => {
     const { newRate } = this.state;
     if (!checkMutationValidity(newRate)) {
-      ToastAndroid.show("필수 정보를 입력해주세요.", ToastAndroid.SHORT);
+      Toast.show("필수 정보를 입력해주세요.", Toast.SHORT);
       return false;
     }
     this.setState({ isSaving: true });
@@ -371,10 +371,7 @@ class AddPresenter extends React.Component {
       })
       .then(() => {
         this.setState({ isSaving: false });
-        if (Platform.OS === "ios") {
-        } else {
-          ToastAndroid.show("입력 완료!", ToastAndroid.SHORT);
-        }
+        Toast.show("입력 완료!", Toast.SHORT);
         this.props.navigation.navigate("Rates");
       });
   };
@@ -383,7 +380,7 @@ class AddPresenter extends React.Component {
     const { rate } = this.props;
     const { newRate } = this.state;
     if (!checkMutationValidity(newRate)) {
-      ToastAndroid.show("필수 정보를 입력해주세요.", ToastAndroid.SHORT);
+      Toast.show("필수 정보를 입력해주세요.", Toast.SHORT);
       return false;
     }
     this.setState({ isSaving: true });
@@ -398,10 +395,7 @@ class AddPresenter extends React.Component {
       })
       .then(() => {
         this.setState({ isSaving: false });
-        if (Platform.OS === "ios") {
-        } else {
-          ToastAndroid.show("수정 완료!", ToastAndroid.SHORT);
-        }
+        Toast.show("수정 완료!", Toast.SHORT);
         this.props.navigation.navigate("Rates");
       });
   };
