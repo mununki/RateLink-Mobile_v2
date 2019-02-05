@@ -3,6 +3,7 @@ import { Button, Spinner, Text } from "@shoutem/ui";
 import { withApollo } from "react-apollo";
 import { GET_RATES } from "../screens/App/Rate/Rates/RatesQueries";
 import { GET_QUERYPARAMS } from "../lib/clientQueries";
+import Toast from "react-native-simple-toast";
 
 class RateReadMore extends React.Component {
   state = {
@@ -23,8 +24,9 @@ class RateReadMore extends React.Component {
           after: rates.pageInfo.endCursor
         },
         updateQuery: (previousResult, { fetchMoreResult }) => {
-          if (!fetchMoreResult.getRates.data.pageInfo.hasNextPage)
-            console.log("마지막 페이지 입니다.");
+          if (!fetchMoreResult.getRates.data.pageInfo.hasNextPage) {
+            Toast.show("마지막 페이지 입니다.", Toast.SHORT);
+          }
           return fetchMoreResult.getRates.data.edges.length > 0
             ? {
                 getRates: {

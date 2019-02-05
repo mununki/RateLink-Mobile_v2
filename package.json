@@ -18,6 +18,7 @@
     "cross-fetch": "^3.0.0",
     "dayjs": "^1.8.0",
     "expo": "^32.0.0",
+    "expokit": "32.0.6",
     "graphql": "^14.1.1",
     "graphql-tag": "^2.10.1",
     "prop-types": "^15.6.2",
