@@ -1,28 +1,49 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Button, Text, Icon, Spinner } from "@shoutem/ui";
 import styled from "styled-components/native";
 import { Query } from "react-apollo";
 import { ME } from "../../../queries/sharedQueries";
+import ProfilePresenter from "./ProfilePresenter";
 
 class ProfileContainer extends React.Component {
-  static navigationOptions = {
-    title: "Home"
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerTitle: "내 프로필",
+      headerLeft: (
+        <Button styleName="clear" onPress={() => navigation.toggleDrawer()}>
+          <Icon name="sidebar" />
+        </Button>
+      ),
+      headerStyle: {
+        backgroundColor: "#6dbad8"
+      },
+      headerTintColor: "#fff",
+      headerTitleStyle: {
+        fontWeight: "bold"
+      }
+    };
   };
   render() {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>Profile Screen</Text>
-        <Query query={ME}>
-          {({ loading, error, data }) => {
-            if (loading) return <Text>Loading...</Text>;
-            if (error) return <Text>Error :(</Text>;
-
+      <Query query={ME} fetchPolicy="network-only">
+        {({ loading, error, data }) => {
+          if (loading)
             return (
-              <Text>{JSON.stringify(data.me.data.profile.profile_name)}</Text>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+              >
+                <Spinner />
+              </View>
             );
-          }}
-        </Query>
-      </View>
+          if (error) return <Text>Error :(</Text>;
+
+          return <ProfilePresenter me={data.me} />;
+        }}
+      </Query>
     );
   }
 }

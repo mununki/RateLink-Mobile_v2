@@ -22,7 +22,8 @@
 - [x] Rate Delete
 - [x] ReadMore (fetchMore)
 - [x] Pull to Refresh
-- [ ] Profile update
-- [ ] Friend management
+- [x] Profile update + avatar upload
+- [x] Friend management
+- [x] Search users
 - [ ] Rate Chart
 - [ ] Styling
