@@ -23,6 +23,7 @@ import {
   DatePickerIOS,
   DatePickerAndroid
 } from "react-native";
+import { ME } from "../../../../queries/sharedQueries";
 
 class TitleHeader extends React.Component {
   state = {
@@ -225,33 +226,38 @@ class RatesContainer extends React.Component {
 
   render() {
     return (
-      <Query query={GET_QUERYPARAMS}>
+      <Query query={ME}>
         {({ loading, error, data }) => {
           if (loading)
             return (
-              <View>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+              >
                 <Spinner />
               </View>
             );
           if (error)
             return (
-              <View>
-                <Text>Error :(</Text>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+              >
+                <Text>Network Error</Text>
               </View>
             );
 
-          const queryParams = data.queryParams;
+          const me = data.me;
 
           return (
-            <Query
-              query={GET_RATES}
-              variables={{
-                first: 20,
-                queryParams: JSON.stringify(queryParams),
-                after: null
-              }}
-            >
-              {({ loading, error, data, fetchMore }) => {
+            <Query query={GET_QUERYPARAMS}>
+              {({ loading, error, data }) => {
                 if (loading)
                   return (
                     <View
@@ -264,15 +270,55 @@ class RatesContainer extends React.Component {
                       <Spinner />
                     </View>
                   );
-                if (error) return <Text>Error :(</Text>;
+                if (error)
+                  return (
+                    <View>
+                      <Text>Error :(</Text>
+                    </View>
+                  );
 
-                if (data && data.getRates.ok) {
-                  const rates = data.getRates.data;
+                const queryParams = data.queryParams;
 
-                  return <RatesPresenter rates={rates} fetchMore={fetchMore} />;
-                } else {
-                  return <Text>Error :(</Text>;
-                }
+                return (
+                  <Query
+                    query={GET_RATES}
+                    variables={{
+                      first: 20,
+                      queryParams: JSON.stringify(queryParams),
+                      after: null
+                    }}
+                  >
+                    {({ loading, error, data, fetchMore }) => {
+                      if (loading)
+                        return (
+                          <View
+                            style={{
+                              flex: 1,
+                              alignItems: "center",
+                              justifyContent: "center"
+                            }}
+                          >
+                            <Spinner />
+                          </View>
+                        );
+                      if (error) return <Text>Error :(</Text>;
+
+                      if (data && data.getRates.ok) {
+                        const rates = data.getRates.data;
+
+                        return (
+                          <RatesPresenter
+                            me={me}
+                            rates={rates}
+                            fetchMore={fetchMore}
+                          />
+                        );
+                      } else {
+                        return <Text>Error :(</Text>;
+                      }
+                    }}
+                  </Query>
+                );
               }}
             </Query>
           );

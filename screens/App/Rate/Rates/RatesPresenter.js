@@ -63,7 +63,7 @@ class RatesPresenter extends React.Component {
   };
 
   render() {
-    const { rates, fetchMore } = this.props;
+    const { me, rates, fetchMore } = this.props;
     const {
       currentlyOverlayed,
       currentlyOverlayedResolveMethod,
@@ -99,6 +99,7 @@ class RatesPresenter extends React.Component {
         >
           {rates.edges.map(edge => (
             <RateCard
+              me={me}
               key={edge.node.id}
               rate={edge.node}
               currentlyOverlayed={currentlyOverlayed}

@@ -5,6 +5,7 @@ export const FRAGMENT_RATE = gql`
     id
     inputperson {
       id
+      email
       profile {
         profile_name
         image
