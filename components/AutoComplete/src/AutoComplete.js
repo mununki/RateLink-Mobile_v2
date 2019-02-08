@@ -24,7 +24,7 @@ class AutoComplete extends React.Component {
   };
 
   render() {
-    const { options, onSelect, selected, loadAsync } = this.props;
+    const { isSearchable, options, onSelect, selected, loadAsync } = this.props;
     const { isOpen } = this.state;
     return (
       <View>
@@ -86,19 +86,22 @@ class AutoComplete extends React.Component {
               >
                 <Text>{options.length}개 찾음</Text>
               </View>
-              <TextInput
-                autoComplete="off"
-                autoCapitalize="none"
-                autoCorrect={false}
-                onChangeText={text => loadAsync(text)}
-                placeholder="Search"
-                style={{
-                  marginTop: 5,
-                  marginBottom: 20,
-                  marginLeft: 10,
-                  marginRight: 10
-                }}
-              />
+              {isSearchable ||
+              typeof this.props.isSearchable === "undefined" ? (
+                <TextInput
+                  autoComplete="off"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  onChangeText={text => loadAsync(text)}
+                  placeholder="Search"
+                  style={{
+                    marginTop: 5,
+                    marginBottom: 20,
+                    marginLeft: 10,
+                    marginRight: 10
+                  }}
+                />
+              ) : null}
               <ScrollView>
                 {options &&
                   options.map((option, index) => (
