@@ -14,7 +14,7 @@ class DrawerContainer extends React.Component {
       <View styleName="fill-parent">
         <View>
           <View style={{ paddingTop: 100, backgroundColor: "#444444" }}>
-            <Query query={ME}>
+            <Query query={ME} fetchPolicy="network-only">
               {({ loading, error, data }) => {
                 if (loading) return <Spinner />;
                 if (error) return <Text>Error :(</Text>;
@@ -60,7 +60,7 @@ class DrawerContainer extends React.Component {
               style={{ padding: 15 }}
               onPress={() => this.props.navigation.navigate("Home")}
             >
-              <Title>운임보기</Title>
+              <Title>내 운임</Title>
             </TouchableOpacity>
             <TouchableOpacity
               style={{ padding: 15 }}
