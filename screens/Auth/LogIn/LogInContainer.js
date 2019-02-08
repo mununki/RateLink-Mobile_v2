@@ -19,7 +19,8 @@ class LogInContainer extends React.Component {
   };
   state = {
     email: "",
-    password: ""
+    password: "",
+    isLoging: false
   };
   _handleChange = (text, target) => {
     this.setState({
@@ -27,6 +28,7 @@ class LogInContainer extends React.Component {
     });
   };
   _handleSubmit = async () => {
+    this.setState({ isLoging: true });
     const { email, password } = this.state;
     let res;
     try {
@@ -46,14 +48,17 @@ class LogInContainer extends React.Component {
     } else {
       alert("Email과 비밀번호를 확인하세요");
     }
+    this.setState({ isLoging: false });
   };
 
   render() {
+    const { isLoging } = this.state;
     return (
       <LogInPresenter
         handleChange={this._handleChange}
         handleSubmit={this._handleSubmit}
         logOut={this._logOut}
+        isLoging={isLoging}
       />
     );
   }

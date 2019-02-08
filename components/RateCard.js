@@ -1,5 +1,5 @@
 import React from "react";
-import { Image } from "react-native";
+import { Image, Alert } from "react-native";
 import {
   Text,
   Icon,
@@ -18,16 +18,18 @@ import { withApollo } from "react-apollo";
 import { SET_RATE } from "../screens/App/Rate/Add/AddQueries";
 import { GET_QUERYPARAMS } from "../lib/clientQueries";
 import { GET_RATES } from "../screens/App/Rate/Rates/RatesQueries";
+import Toast from "react-native-simple-toast";
 
 const AWS_S3_ENDPOINT = getAWSS3Url();
 
 const RateCardContainer = styled.View`
   padding: 10px;
   margin: 7px 0 0 0;
-  border: 1px solid #eee;
   background-color: #fff;
   border-radius: 5px;
   height: 170px;
+  border-left-width: ${props => (props.isToday ? "5px" : 0)};
+  border-left-color: #c0392b;
 `;
 
 const AvatarRow = styled.View`
@@ -199,6 +201,7 @@ class RateCard extends React.Component {
 
   render() {
     const {
+      me,
       rate,
       currentlyOverlayed,
       currentlyOverlayedResolveMethod,
@@ -215,6 +218,7 @@ class RateCard extends React.Component {
             currentlyOverlayedResolveMethod(false);
           }
         }}
+        delayLongPress={300}
         onLongPress={() => {
           // check if other card is already overlayted
           if (currentlyOverlayed) {
@@ -229,7 +233,14 @@ class RateCard extends React.Component {
           this._toggleOverlay(true);
         }}
       >
-        <RateCardContainer style={{ elevation: 3 }}>
+        <RateCardContainer
+          style={{
+            elevation: 3
+          }}
+          isToday={
+            dayjs(rate.offeredDate).format("MM-DD") === dayjs().format("MM-DD")
+          }
+        >
           <AvatarRow>
             <Avatar>
               <Image
@@ -315,26 +326,79 @@ class RateCard extends React.Component {
               <View styleName="horizontal">
                 <Button
                   styleName="lg-gutter-horizontal"
-                  onPress={() => this._handleDuplicate()}
+                  onPress={() => {
+                    if (me.data.email !== rate.inputperson.email) {
+                      Alert.alert(
+                        "확인",
+                        "복제하시겠습니까?",
+                        [
+                          {
+                            text: "취소",
+                            onPress: () => {},
+                            style: "cancel"
+                          },
+                          {
+                            text: "OK",
+                            onPress: () => {
+                              this._handleDuplicate();
+                            }
+                          }
+                        ],
+                        { cancelable: false }
+                      );
+                    } else {
+                      Toast.show(
+                        `이미 ${
+                          me.data.profile.profile_name
+                        }님께서 입력한 운임 입니다.`,
+                        Toast.SHORT
+                      );
+                    }
+                  }}
                 >
                   <Text>복제</Text>
                 </Button>
                 <Button
                   styleName="lg-gutter-horizontal"
-                  onPress={() =>
-                    this.props.navigation.navigate("Add", { rate })
-                  }
+                  onPress={() => {
+                    if (me.data.email !== rate.inputperson.email) {
+                      Toast.show(`입력자가 다릅니다.`, Toast.SHORT);
+                    } else {
+                      this.props.navigation.navigate("Add", { rate });
+                    }
+                  }}
                 >
                   <Text>수정</Text>
                 </Button>
                 <Button
                   styleName="lg-gutter-horizontal"
                   onPress={() => {
-                    _updateParentState({
-                      currentlyOverlayed: null,
-                      currentlyOverlayedResolveMethod: null
-                    });
-                    this._handleDelete();
+                    if (me.data.email !== rate.inputperson.email) {
+                      Toast.show(`입력자가 다릅니다.`, Toast.SHORT);
+                    } else {
+                      Alert.alert(
+                        "확인",
+                        "삭제하시겠습니까?",
+                        [
+                          {
+                            text: "취소",
+                            onPress: () => {},
+                            style: "cancel"
+                          },
+                          {
+                            text: "OK",
+                            onPress: () => {
+                              _updateParentState({
+                                currentlyOverlayed: null,
+                                currentlyOverlayedResolveMethod: null
+                              });
+                              this._handleDelete();
+                            }
+                          }
+                        ],
+                        { cancelable: false }
+                      );
+                    }
                   }}
                 >
                   <Text>삭제</Text>

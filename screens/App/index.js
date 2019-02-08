@@ -18,7 +18,7 @@ const AppDrawer = createDrawerNavigator(
       screen: ProfileStack
     }
   },
-  { contentComponent: DrawerContainer, drawerWidth: 200 }
+  { contentComponent: DrawerContainer, drawerWidth: 250 }
 );
 
 export default AppDrawer;
