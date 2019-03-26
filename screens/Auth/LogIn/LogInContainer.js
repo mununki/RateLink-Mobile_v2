@@ -53,14 +53,7 @@ class LogInContainer extends React.Component {
 
   render() {
     const { isLoging } = this.state;
-    return (
-      <LogInPresenter
-        handleChange={this._handleChange}
-        handleSubmit={this._handleSubmit}
-        logOut={this._logOut}
-        isLoging={isLoging}
-      />
-    );
+    return <LogInPresenter handleChange={this._handleChange} handleSubmit={this._handleSubmit} isLoging={isLoging} />;
   }
 }
 
