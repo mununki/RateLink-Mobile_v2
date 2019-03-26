@@ -1,29 +1,13 @@
 import React from "react";
-import {
-  View,
-  Title,
-  Subtitle,
-  Text,
-  Button,
-  Icon,
-  Caption,
-  Spinner
-} from "@shoutem/ui";
+import { View, Title, Subtitle, Text, Button, Icon, Caption, Spinner } from "@shoutem/ui";
 import { Query, withApollo } from "react-apollo";
 import RatesPresenter from "./RatesPresenter";
 import { GET_RATES } from "./RatesQueries";
-import {
-  GET_QUERYPARAMS,
-  SET_QUERYPARAMS
-} from "../../../../lib/clientQueries";
+import { GET_QUERYPARAMS, SET_QUERYPARAMS } from "../../../../lib/clientQueries";
 import dayjs from "dayjs";
-import {
-  Modal,
-  Platform,
-  DatePickerIOS,
-  DatePickerAndroid
-} from "react-native";
+import { Modal, Platform, DatePickerIOS, DatePickerAndroid } from "react-native";
 import { ME } from "../../../../queries/sharedQueries";
+import RefreshButton from "../../../../components/RefreshButton";
 
 class TitleHeader extends React.Component {
   state = {
@@ -57,12 +41,7 @@ class TitleHeader extends React.Component {
                     ? () => this._toggleSF()
                     : async () => {
                         try {
-                          const {
-                            action,
-                            year,
-                            month,
-                            day
-                          } = await DatePickerAndroid.open({
+                          const { action, year, month, day } = await DatePickerAndroid.open({
                             date: queryParams.initialSF.toDate()
                           });
                           if (action !== DatePickerAndroid.dismissedAction) {
@@ -72,9 +51,7 @@ class TitleHeader extends React.Component {
                                 variables: {
                                   queryParams: {
                                     ...queryParams,
-                                    initialSF: dayjs(
-                                      `${year}-${month + 1}-${day}`
-                                    )
+                                    initialSF: dayjs(`${year}-${month + 1}-${day}`)
                                   }
                                 }
                               })
@@ -86,9 +63,7 @@ class TitleHeader extends React.Component {
                       }
                 }
               >
-                <Caption styleName="sm-gutter-horizontal">
-                  {dayjs(queryParams.initialSF).format("MM-DD")}
-                </Caption>
+                <Caption styleName="sm-gutter-horizontal">{dayjs(queryParams.initialSF).format("MM-DD")}</Caption>
               </Button>
               <Title>RATES</Title>
               <Button
@@ -98,12 +73,7 @@ class TitleHeader extends React.Component {
                     ? () => this._toggleST()
                     : async () => {
                         try {
-                          const {
-                            action,
-                            year,
-                            month,
-                            day
-                          } = await DatePickerAndroid.open({
+                          const { action, year, month, day } = await DatePickerAndroid.open({
                             date: queryParams.initialST.toDate()
                           });
                           if (action !== DatePickerAndroid.dismissedAction) {
@@ -113,9 +83,7 @@ class TitleHeader extends React.Component {
                                 variables: {
                                   queryParams: {
                                     ...queryParams,
-                                    initialST: dayjs(
-                                      `${year}-${month + 1}-${day}`
-                                    )
+                                    initialST: dayjs(`${year}-${month + 1}-${day}`)
                                   }
                                 }
                               })
@@ -127,9 +95,7 @@ class TitleHeader extends React.Component {
                       }
                 }
               >
-                <Caption styleName="sm-gutter-horizontal">
-                  {dayjs(queryParams.initialST).format("MM-DD")}
-                </Caption>
+                <Caption styleName="sm-gutter-horizontal">{dayjs(queryParams.initialST).format("MM-DD")}</Caption>
               </Button>
               <Modal
                 animationType="slide"
@@ -240,18 +206,7 @@ class RatesContainer extends React.Component {
                 <Spinner />
               </View>
             );
-          if (error)
-            return (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}
-              >
-                <Text>Network Error</Text>
-              </View>
-            );
+          if (error) return <RefreshButton />;
 
           const me = data.me;
 
@@ -306,13 +261,7 @@ class RatesContainer extends React.Component {
                       if (data && data.getRates.ok) {
                         const rates = data.getRates.data;
 
-                        return (
-                          <RatesPresenter
-                            me={me}
-                            rates={rates}
-                            fetchMore={fetchMore}
-                          />
-                        );
+                        return <RatesPresenter me={me} rates={rates} fetchMore={fetchMore} />;
                       } else {
                         return <Text>Error :(</Text>;
                       }
