@@ -47,8 +47,8 @@ class LogInContainer extends React.Component {
       this.props.navigation.navigate("App");
     } else {
       alert("Email과 비밀번호를 확인하세요");
+      this.setState({ isLoging: false });
     }
-    this.setState({ isLoging: false });
   };
 
   render() {
