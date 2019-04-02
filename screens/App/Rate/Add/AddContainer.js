@@ -7,7 +7,7 @@ import { Text, Spinner, View } from "@shoutem/ui";
 class AddContainer extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      headerTitle: "추가",
+      headerTitle: "Add",
       headerStyle: {
         backgroundColor: "#6dbad8"
       },

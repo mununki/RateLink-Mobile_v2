@@ -1,5 +1,4 @@
 import React from "react";
-import { View, Text } from "react-native";
 import { withNavigation } from "react-navigation";
 import { SIGNUP, CHECK_IF_EXIST } from "./SignUpQueries";
 import SignUpPresenter from "./SignUpPresenter";

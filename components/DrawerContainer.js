@@ -25,9 +25,7 @@ class DrawerContainer extends React.Component {
                       source={
                         data.me.data.profile.image
                           ? {
-                              uri: `${AWS_S3_ENDPOINT}${
-                                data.me.data.profile.image
-                              }`
+                              uri: `${AWS_S3_ENDPOINT}${data.me.data.profile.image}`
                             }
                           : require("../assets/profile_images/dummy.png")
                       }
@@ -48,7 +46,7 @@ class DrawerContainer extends React.Component {
                         color: "#fff"
                       }}
                     >
-                      {data.me.data.profile.profile_name} 님
+                      {data.me.data.profile.profile_name}
                     </Text>
                   </View>
                 );
@@ -56,23 +54,14 @@ class DrawerContainer extends React.Component {
             </Query>
           </View>
           <View style={{ marginTop: 30, padding: 20 }}>
-            <TouchableOpacity
-              style={{ padding: 15 }}
-              onPress={() => this.props.navigation.navigate("Home")}
-            >
-              <Title>내 운임</Title>
+            <TouchableOpacity style={{ padding: 15 }} onPress={() => this.props.navigation.navigate("Home")}>
+              <Title>My Rates</Title>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={{ padding: 15 }}
-              onPress={() => this.props.navigation.navigate("Profile")}
-            >
-              <Title>내 프로필</Title>
+            <TouchableOpacity style={{ padding: 15 }} onPress={() => this.props.navigation.navigate("Profile")}>
+              <Title>Profile</Title>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={{ padding: 15 }}
-              onPress={logOut(this.props.navigation)}
-            >
-              <Title>로그아웃</Title>
+            <TouchableOpacity style={{ padding: 15 }} onPress={logOut(this.props.navigation)}>
+              <Title>Log Out</Title>
             </TouchableOpacity>
           </View>
         </View>

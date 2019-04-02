@@ -1,15 +1,6 @@
 import React from "react";
 import { Modal } from "react-native";
-import {
-  View,
-  Subtitle,
-  Text,
-  Button,
-  Icon,
-  TextInput,
-  TouchableOpacity,
-  Overlay
-} from "@shoutem/ui";
+import { View, Subtitle, Text, Button, Icon, TextInput, TouchableOpacity, Overlay } from "@shoutem/ui";
 import { ScrollView } from "react-native-gesture-handler";
 
 class AutoComplete extends React.Component {
@@ -29,14 +20,9 @@ class AutoComplete extends React.Component {
     return (
       <View>
         <View styleName="horizontal v-center">
-          <Button
-            style={{ flex: 1, backgroundColor: "#eee" }}
-            onPress={() => this._controlModal(true)}
-          >
+          <Button style={{ flex: 1, backgroundColor: "#eee" }} onPress={() => this._controlModal(true)}>
             <Subtitle style={{ marginTop: 10, marginBottom: 10 }}>
-              {selected.length > 0 && selected[0]
-                ? selected[0].label
-                : "선택없음"}
+              {selected.length > 0 && selected[0] ? selected[0].label : "not selected"}
             </Subtitle>
             <Icon name="drop-down" />
           </Button>
@@ -84,10 +70,9 @@ class AutoComplete extends React.Component {
                   marginRight: 5
                 }}
               >
-                <Text>{options.length}개 찾음</Text>
+                <Text>{options.length} found</Text>
               </View>
-              {isSearchable ||
-              typeof this.props.isSearchable === "undefined" ? (
+              {isSearchable || typeof this.props.isSearchable === "undefined" ? (
                 <TextInput
                   autoComplete="off"
                   autoCapitalize="none"
@@ -113,9 +98,7 @@ class AutoComplete extends React.Component {
                         this._controlModal(false);
                       }}
                     >
-                      <Subtitle styleName="md-gutter-vertical">
-                        {option.label}
-                      </Subtitle>
+                      <Subtitle styleName="md-gutter-vertical">{option.label}</Subtitle>
                     </Button>
                   ))}
               </ScrollView>

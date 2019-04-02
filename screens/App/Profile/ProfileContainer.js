@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Button, Text, Icon, Spinner } from "@shoutem/ui";
-import styled from "styled-components/native";
 import { Query } from "react-apollo";
 import { ME } from "../../../queries/sharedQueries";
 import ProfilePresenter from "./ProfilePresenter";
@@ -8,7 +7,7 @@ import ProfilePresenter from "./ProfilePresenter";
 class ProfileContainer extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      headerTitle: "내 프로필",
+      headerTitle: "Profile",
       headerLeft: (
         <Button styleName="clear" onPress={() => navigation.toggleDrawer()}>
           <Icon name="sidebar" />

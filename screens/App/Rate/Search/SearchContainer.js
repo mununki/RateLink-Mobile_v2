@@ -4,7 +4,7 @@ import SearchPresenter from "./SearchPresenter";
 class SearchContainer extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      headerTitle: "검색",
+      headerTitle: "Search",
       headerStyle: {
         backgroundColor: "#6dbad8"
       },

@@ -25,7 +25,7 @@ class RateReadMore extends React.Component {
         },
         updateQuery: (previousResult, { fetchMoreResult }) => {
           if (!fetchMoreResult.getRates.data.pageInfo.hasNextPage) {
-            Toast.show("마지막 페이지 입니다.", Toast.SHORT);
+            Toast.show("This is the last page.", Toast.SHORT);
           }
           return fetchMoreResult.getRates.data.edges.length > 0
             ? {
@@ -33,10 +33,7 @@ class RateReadMore extends React.Component {
                   ok: true,
                   data: {
                     pageInfo: fetchMoreResult.getRates.data.pageInfo,
-                    edges: [
-                      ...previousResult.getRates.data.edges,
-                      ...fetchMoreResult.getRates.data.edges
-                    ],
+                    edges: [...previousResult.getRates.data.edges, ...fetchMoreResult.getRates.data.edges],
                     __typename: "Rate_rateConnection"
                   },
                   error: null,
