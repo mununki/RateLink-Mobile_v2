@@ -2,25 +2,11 @@ import React from "react";
 import { View, Text, Subtitle, Spinner, Button, Icon } from "@shoutem/ui";
 import dayjs from "dayjs";
 import { Query, withApollo } from "react-apollo";
-import {
-  GET_INPUTPERSONS,
-  GET_CLIENTS,
-  GET_LINERS,
-  GET_LOCATIONS,
-  GET_CNTRTYPES
-} from "../Rates/RatesQueries";
+import { GET_INPUTPERSONS, GET_CLIENTS, GET_LINERS, GET_LOCATIONS, GET_CNTRTYPES } from "../Rates/RatesQueries";
 import { SET_QUERYPARAMS } from "../../../../lib/clientQueries";
 import { withNavigation } from "react-navigation";
-import {
-  Platform,
-  DatePickerIOS,
-  Modal,
-  DatePickerAndroid
-} from "react-native";
-import {
-  AutoComplete,
-  AsyncComplete
-} from "../../../../components/AutoComplete";
+import { Platform, DatePickerIOS, Modal, DatePickerAndroid } from "react-native";
+import { AutoComplete, AsyncComplete } from "../../../../components/AutoComplete";
 
 class SearchPresenter extends React.Component {
   constructor(props) {
@@ -74,9 +60,7 @@ class SearchPresenter extends React.Component {
             .then(res =>
               this.setState(prevState => {
                 let results = [];
-                res.data.getInputpersons.map(ip =>
-                  results.push({ label: ip.profile.profile_name, value: ip.id })
-                );
+                res.data.getInputpersons.map(ip => results.push({ label: ip.profile.profile_name, value: ip.id }));
                 results.sort((a, b) => (a.label > b.label ? 1 : -1));
                 return {
                   ...prevState,
@@ -105,9 +89,7 @@ class SearchPresenter extends React.Component {
             .then(res =>
               this.setState(prevState => {
                 let results = [];
-                res.data.getClients.map(ct =>
-                  results.push({ label: ct.name, value: ct.id })
-                );
+                res.data.getClients.map(ct => results.push({ label: ct.name, value: ct.id }));
                 results.sort((a, b) => (a.label > b.label ? 1 : -1));
                 return {
                   ...prevState,
@@ -136,9 +118,7 @@ class SearchPresenter extends React.Component {
             .then(res =>
               this.setState(prevState => {
                 let results = [];
-                res.data.getLiners.map(ln =>
-                  results.push({ label: ln.label, value: ln.id })
-                );
+                res.data.getLiners.map(ln => results.push({ label: ln.label, value: ln.id }));
                 results.sort((a, b) => (a.label > b.label ? 1 : -1));
                 return {
                   ...prevState,
@@ -170,9 +150,7 @@ class SearchPresenter extends React.Component {
               .then(res =>
                 this.setState(prevState => {
                   let results = [];
-                  res.data.getLocations.map(pl =>
-                    results.push({ label: pl.name, value: pl.id })
-                  );
+                  res.data.getLocations.map(pl => results.push({ label: pl.name, value: pl.id }));
                   results.sort((a, b) => (a.label > b.label ? 1 : -1));
                   resolve(results);
                 })
@@ -199,9 +177,7 @@ class SearchPresenter extends React.Component {
               .then(res =>
                 this.setState(prevState => {
                   let results = [];
-                  res.data.getLocations.map(pd =>
-                    results.push({ label: pd.name, value: pd.id })
-                  );
+                  res.data.getLocations.map(pd => results.push({ label: pd.name, value: pd.id }));
                   results.sort((a, b) => (a.label > b.label ? 1 : -1));
                   resolve(results);
                 })
@@ -225,9 +201,7 @@ class SearchPresenter extends React.Component {
             .then(res =>
               this.setState(prevState => {
                 let results = [];
-                res.data.getCNTRtypes.map(ty =>
-                  results.push({ label: ty.name, value: ty.id })
-                );
+                res.data.getCNTRtypes.map(ty => results.push({ label: ty.name, value: ty.id }));
                 results.sort((a, b) => (a.label > b.label ? 1 : -1));
                 return {
                   ...prevState,
@@ -291,22 +265,13 @@ class SearchPresenter extends React.Component {
       isOpenSF,
       isOpenST,
       options: { inputpersons, clients, liners, pols, pods, types },
-      queryParams: {
-        selectedIp,
-        selectedCt,
-        selectedLn,
-        selectedPl,
-        selectedPd,
-        selectedTy,
-        initialSF,
-        initialST
-      }
+      queryParams: { selectedIp, selectedCt, selectedLn, selectedPl, selectedPd, selectedTy, initialSF, initialST }
     } = this.state;
 
     return (
       <View>
         <View styleName="sm-gutter">
-          <Subtitle>입력자</Subtitle>
+          <Subtitle>Teller</Subtitle>
           <AutoComplete
             options={inputpersons}
             selected={selectedIp}
@@ -315,7 +280,7 @@ class SearchPresenter extends React.Component {
           />
           <View styleName="horizontal space-between">
             <View styleName="flexible">
-              <Subtitle>업체명</Subtitle>
+              <Subtitle>Client</Subtitle>
               <AutoComplete
                 options={clients}
                 selected={selectedCt}
@@ -336,7 +301,7 @@ class SearchPresenter extends React.Component {
 
           <View styleName="horizontal space-between">
             <View styleName="flexible">
-              <Subtitle>선사</Subtitle>
+              <Subtitle>Liner</Subtitle>
               <AutoComplete
                 options={liners}
                 selected={selectedLn}
@@ -345,7 +310,7 @@ class SearchPresenter extends React.Component {
               />
             </View>
             <View styleName="flexible">
-              <Subtitle>선적지</Subtitle>
+              <Subtitle>POL</Subtitle>
               <AsyncComplete
                 selected={selectedPl}
                 onSelect={select => this._setSelected(select, "selectedPl")}
@@ -354,7 +319,7 @@ class SearchPresenter extends React.Component {
             </View>
           </View>
 
-          <Subtitle>도착지</Subtitle>
+          <Subtitle>POD</Subtitle>
           <AsyncComplete
             selected={selectedPd}
             onSelect={select => this._setSelected(select, "selectedPd")}
@@ -367,12 +332,7 @@ class SearchPresenter extends React.Component {
                   ? () => this._toggleSF()
                   : async () => {
                       try {
-                        const {
-                          action,
-                          year,
-                          month,
-                          day
-                        } = await DatePickerAndroid.open({
+                        const { action, year, month, day } = await DatePickerAndroid.open({
                           date: initialSF.toDate()
                         });
                         if (action !== DatePickerAndroid.dismissedAction) {
@@ -392,12 +352,7 @@ class SearchPresenter extends React.Component {
                   ? () => this._toggleST()
                   : async () => {
                       try {
-                        const {
-                          action,
-                          year,
-                          month,
-                          day
-                        } = await DatePickerAndroid.open({
+                        const { action, year, month, day } = await DatePickerAndroid.open({
                           date: initialST.toDate()
                         });
                         if (action !== DatePickerAndroid.dismissedAction) {
@@ -423,11 +378,7 @@ class SearchPresenter extends React.Component {
                 <Button onPress={this._toggleSF} styleName="lg-gutter-bottom">
                   <Icon name="close" />
                 </Button>
-                <DatePickerIOS
-                  mode="date"
-                  date={initialSF.toDate()}
-                  onDateChange={this._setInitialSF}
-                />
+                <DatePickerIOS mode="date" date={initialSF.toDate()} onDateChange={this._setInitialSF} />
               </View>
             ) : null}
           </Modal>
@@ -442,11 +393,7 @@ class SearchPresenter extends React.Component {
                 <Button onPress={this._toggleST} styleName="lg-gutter-bottom">
                   <Icon name="close" />
                 </Button>
-                <DatePickerIOS
-                  mode="date"
-                  date={initialST.toDate()}
-                  onDateChange={this._setInitialST}
-                />
+                <DatePickerIOS mode="date" date={initialST.toDate()} onDateChange={this._setInitialST} />
               </View>
             ) : null}
           </Modal>

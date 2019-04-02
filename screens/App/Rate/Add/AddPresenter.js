@@ -1,38 +1,14 @@
 import React from "react";
-import {
-  DatePickerAndroid,
-  Modal,
-  DatePickerIOS,
-  Platform,
-  Keyboard
-} from "react-native";
-import {
-  View,
-  Text,
-  Button,
-  Subtitle,
-  Icon,
-  TextInput,
-  Caption,
-  Spinner
-} from "@shoutem/ui";
+import { DatePickerAndroid, Modal, DatePickerIOS, Platform, Keyboard } from "react-native";
+import { View, Text, Button, Subtitle, Icon, TextInput, Caption, Spinner } from "@shoutem/ui";
 import { ME } from "../../../../queries/sharedQueries";
 import dayjs from "dayjs";
 import { withApollo } from "react-apollo";
-import {
-  GET_RATES,
-  GET_CLIENTS,
-  GET_LINERS,
-  GET_LOCATIONS,
-  GET_CNTRTYPES
-} from "../Rates/RatesQueries";
+import { GET_RATES, GET_CLIENTS, GET_LINERS, GET_LOCATIONS, GET_CNTRTYPES } from "../Rates/RatesQueries";
 import { SET_RATE } from "./AddQueries";
 import { withNavigation } from "react-navigation";
 import { GET_QUERYPARAMS } from "../../../../lib/clientQueries";
-import {
-  AutoComplete,
-  AsyncComplete
-} from "../../../../components/AutoComplete";
+import { AutoComplete, AsyncComplete } from "../../../../components/AutoComplete";
 import { NavigationEvents } from "react-navigation";
 import checkMutationValidity from "../../../../utils/checkMutationValidity";
 import Toast from "react-native-simple-toast";
@@ -146,9 +122,7 @@ class AddPresenter extends React.Component {
             .then(res =>
               this.setState(prevState => {
                 let results = [];
-                res.data.getClients.map(ct =>
-                  results.push({ label: ct.name, value: ct.id })
-                );
+                res.data.getClients.map(ct => results.push({ label: ct.name, value: ct.id }));
                 results.sort((a, b) => (a.label > b.label ? 1 : -1));
                 return {
                   ...prevState,
@@ -177,9 +151,7 @@ class AddPresenter extends React.Component {
             .then(res =>
               this.setState(prevState => {
                 let results = [];
-                res.data.getLiners.map(ln =>
-                  results.push({ label: ln.label, value: ln.id })
-                );
+                res.data.getLiners.map(ln => results.push({ label: ln.label, value: ln.id }));
                 results.sort((a, b) => (a.label > b.label ? 1 : -1));
                 return {
                   ...prevState,
@@ -211,9 +183,7 @@ class AddPresenter extends React.Component {
               .then(res =>
                 this.setState(prevState => {
                   let results = [];
-                  res.data.getLocations.map(pl =>
-                    results.push({ label: pl.name, value: pl.id })
-                  );
+                  res.data.getLocations.map(pl => results.push({ label: pl.name, value: pl.id }));
                   results.sort((a, b) => (a.label > b.label ? 1 : -1));
                   resolve(results);
                 })
@@ -240,9 +210,7 @@ class AddPresenter extends React.Component {
               .then(res =>
                 this.setState(prevState => {
                   let results = [];
-                  res.data.getLocations.map(pd =>
-                    results.push({ label: pd.name, value: pd.id })
-                  );
+                  res.data.getLocations.map(pd => results.push({ label: pd.name, value: pd.id }));
                   results.sort((a, b) => (a.label > b.label ? 1 : -1));
                   resolve(results);
                 })
@@ -266,9 +234,7 @@ class AddPresenter extends React.Component {
             .then(res =>
               this.setState(prevState => {
                 let results = [];
-                res.data.getCNTRtypes.map(ty =>
-                  results.push({ label: ty.name, value: ty.id })
-                );
+                res.data.getCNTRtypes.map(ty => results.push({ label: ty.name, value: ty.id }));
                 results.sort((a, b) => (a.label > b.label ? 1 : -1));
                 return {
                   ...prevState,
@@ -317,7 +283,7 @@ class AddPresenter extends React.Component {
   _handleSave = () => {
     const { newRate } = this.state;
     if (!checkMutationValidity(newRate)) {
-      Toast.show("필수 정보를 입력해주세요.", Toast.SHORT);
+      Toast.show("Please input the required information.", Toast.SHORT);
       return false;
     }
     this.setState({ isSaving: true });
@@ -371,7 +337,7 @@ class AddPresenter extends React.Component {
       })
       .then(() => {
         this.setState({ isSaving: false });
-        Toast.show("입력 완료!", Toast.SHORT);
+        Toast.show("Successfully done!", Toast.SHORT);
         this.props.navigation.navigate("Rates");
       });
   };
@@ -380,7 +346,7 @@ class AddPresenter extends React.Component {
     const { rate } = this.props;
     const { newRate } = this.state;
     if (!checkMutationValidity(newRate)) {
-      Toast.show("필수 정보를 입력해주세요.", Toast.SHORT);
+      Toast.show("Please input the required information.", Toast.SHORT);
       return false;
     }
     this.setState({ isSaving: true });
@@ -395,7 +361,7 @@ class AddPresenter extends React.Component {
       })
       .then(() => {
         this.setState({ isSaving: false });
-        Toast.show("수정 완료!", Toast.SHORT);
+        Toast.show("Successfully modified!", Toast.SHORT);
         this.props.navigation.navigate("Rates");
       });
   };
@@ -452,14 +418,8 @@ class AddPresenter extends React.Component {
       <View>
         <NavigationEvents
           onDidFocus={() => {
-            this.keyboardDidShowListener = Keyboard.addListener(
-              "keyboardDidShow",
-              this._keyboardDidShow
-            );
-            this.keyboardDidHideListener = Keyboard.addListener(
-              "keyboardDidHide",
-              this._keyboardDidHide
-            );
+            this.keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", this._keyboardDidShow);
+            this.keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", this._keyboardDidHide);
           }}
           onWillBlur={() => {
             this.keyboardDidShowListener.remove();
@@ -467,12 +427,10 @@ class AddPresenter extends React.Component {
           }}
         />
         <View styleName="sm-gutter">
-          <View
-            style={isKeyboardShow ? { height: 0, overflow: "hidden" } : null}
-          >
+          <View style={isKeyboardShow ? { height: 0, overflow: "hidden" } : null}>
             <View styleName="horizontal space-between">
               <View styleName="flexible">
-                <Subtitle>업체명</Subtitle>
+                <Subtitle>Clients</Subtitle>
                 <AutoComplete
                   options={clients}
                   selected={selectedCt}
@@ -493,7 +451,7 @@ class AddPresenter extends React.Component {
 
             <View styleName="horizontal space-between">
               <View styleName="flexible">
-                <Subtitle>선사</Subtitle>
+                <Subtitle>Liners</Subtitle>
                 <AutoComplete
                   options={liners}
                   selected={selectedLn}
@@ -502,7 +460,7 @@ class AddPresenter extends React.Component {
                 />
               </View>
               <View styleName="flexible">
-                <Subtitle>선적지</Subtitle>
+                <Subtitle>POL</Subtitle>
                 <AsyncComplete
                   selected={selectedPl}
                   onSelect={select => this._setSelected(select, "selectedPl")}
@@ -511,7 +469,7 @@ class AddPresenter extends React.Component {
               </View>
             </View>
 
-            <Subtitle>도착지</Subtitle>
+            <Subtitle>POD</Subtitle>
             <AsyncComplete
               selected={selectedPd}
               onSelect={select => this._setSelected(select, "selectedPd")}
@@ -529,7 +487,7 @@ class AddPresenter extends React.Component {
               ) : (
                 <View styleName="horizontal">
                   <Icon name="clear-text" style={{ color: "#c0392b" }} />
-                  <Text>업체명</Text>
+                  <Text>Clients</Text>
                 </View>
               )}
               {selectedTy[0] ? (
@@ -551,7 +509,7 @@ class AddPresenter extends React.Component {
               ) : (
                 <View styleName="horizontal">
                   <Icon name="clear-text" style={{ color: "#c0392b" }} />
-                  <Text>선사</Text>
+                  <Text>Liners</Text>
                 </View>
               )}
               {selectedPl[0] ? (
@@ -562,7 +520,7 @@ class AddPresenter extends React.Component {
               ) : (
                 <View styleName="horizontal">
                   <Icon name="clear-text" style={{ color: "#c0392b" }} />
-                  <Text>선적지</Text>
+                  <Text>POL</Text>
                 </View>
               )}
               {selectedPd[0] ? (
@@ -573,7 +531,7 @@ class AddPresenter extends React.Component {
               ) : (
                 <View styleName="horizontal">
                   <Icon name="clear-text" style={{ color: "#c0392b" }} />
-                  <Text>도착지</Text>
+                  <Text>POD</Text>
                 </View>
               )}
             </View>
@@ -586,12 +544,7 @@ class AddPresenter extends React.Component {
                   ? () => this._toggleSF()
                   : async () => {
                       try {
-                        const {
-                          action,
-                          year,
-                          month,
-                          day
-                        } = await DatePickerAndroid.open({
+                        const { action, year, month, day } = await DatePickerAndroid.open({
                           date: offeredDate.toDate()
                         });
                         if (action !== DatePickerAndroid.dismissedAction) {
@@ -611,12 +564,7 @@ class AddPresenter extends React.Component {
                   ? () => this._toggleST()
                   : async () => {
                       try {
-                        const {
-                          action,
-                          year,
-                          month,
-                          day
-                        } = await DatePickerAndroid.open({
+                        const { action, year, month, day } = await DatePickerAndroid.open({
                           date: effectiveDate.toDate()
                         });
                         if (action !== DatePickerAndroid.dismissedAction) {
@@ -720,15 +668,9 @@ class AddPresenter extends React.Component {
         <Button
           styleName="secondary"
           style={{ paddingTop: 5, paddingBottom: 5 }}
-          onPress={
-            !rate ? () => this._handleSave() : () => this._handleModify()
-          }
+          onPress={!rate ? () => this._handleSave() : () => this._handleModify()}
         >
-          {isSaving ? (
-            <Spinner styleName="md-gutter-vertical" />
-          ) : (
-            <Text>SAVE</Text>
-          )}
+          {isSaving ? <Spinner styleName="md-gutter-vertical" /> : <Text>SAVE</Text>}
         </Button>
         <Modal
           animationType="slide"
@@ -740,11 +682,7 @@ class AddPresenter extends React.Component {
             <Button onPress={this._toggleSF} styleName="lg-gutter-bottom">
               <Icon name="close" />
             </Button>
-            <DatePickerIOS
-              mode="date"
-              date={offeredDate.toDate()}
-              onDateChange={this._setInitialSF}
-            />
+            <DatePickerIOS mode="date" date={offeredDate.toDate()} onDateChange={this._setInitialSF} />
           </View>
         </Modal>
         <Modal
@@ -757,11 +695,7 @@ class AddPresenter extends React.Component {
             <Button onPress={this._toggleST} styleName="lg-gutter-bottom">
               <Icon name="close" />
             </Button>
-            <DatePickerIOS
-              mode="date"
-              date={effectiveDate.toDate()}
-              onDateChange={this._setInitialST}
-            />
+            <DatePickerIOS mode="date" date={effectiveDate.toDate()} onDateChange={this._setInitialST} />
           </View>
         </Modal>
       </View>

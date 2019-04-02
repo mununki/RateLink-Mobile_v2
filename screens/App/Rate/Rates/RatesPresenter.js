@@ -18,10 +18,7 @@ class RatesPresenter extends React.Component {
   };
 
   componentDidMount() {
-    this.backHandlerListener = BackHandler.addEventListener(
-      "hardwareBackPress",
-      this._handleBackPress
-    );
+    this.backHandlerListener = BackHandler.addEventListener("hardwareBackPress", this._handleBackPress);
   }
 
   _updateParentState = newState => {
@@ -55,7 +52,7 @@ class RatesPresenter extends React.Component {
       return false;
     }
     this.counterAppExit = 1;
-    Toast.show("뒤로가기 버튼을 빠르게 다시 누르면 종료 됩니다.", Toast.SHORT);
+    Toast.show("Press back button twice to exit an app.", Toast.SHORT);
     setTimeout(() => {
       this.counterAppExit = 0;
     }, 1000);
@@ -64,20 +61,13 @@ class RatesPresenter extends React.Component {
 
   render() {
     const { me, rates, fetchMore } = this.props;
-    const {
-      currentlyOverlayed,
-      currentlyOverlayedResolveMethod,
-      refreshing
-    } = this.state;
+    const { currentlyOverlayed, currentlyOverlayedResolveMethod, refreshing } = this.state;
 
     return (
       <View styleName="flexible" style={{ backgroundColor: "#eee" }}>
         <NavigationEvents
           onDidFocus={() => {
-            this.backHandlerListener = BackHandler.addEventListener(
-              "hardwareBackPress",
-              this._handleBackPress
-            );
+            this.backHandlerListener = BackHandler.addEventListener("hardwareBackPress", this._handleBackPress);
           }}
           onWillBlur={() => {
             this.backHandlerListener.remove();
@@ -90,12 +80,7 @@ class RatesPresenter extends React.Component {
             }
           }}
           scrollEventThrottle={320}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={this._onRefresh}
-            />
-          }
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this._onRefresh} />}
         >
           {rates.edges.map(edge => (
             <RateCard

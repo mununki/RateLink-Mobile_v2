@@ -1,14 +1,6 @@
 import React from "react";
 import { Image, Alert } from "react-native";
-import {
-  Text,
-  Icon,
-  Caption,
-  Overlay,
-  Button,
-  View,
-  TouchableOpacity
-} from "@shoutem/ui";
+import { Text, Icon, Caption, Overlay, Button, View, TouchableOpacity } from "@shoutem/ui";
 import PropTypes from "prop-types";
 import { getAWSS3Url } from "../env.config";
 import styled from "styled-components/native";
@@ -176,9 +168,7 @@ class RateCard extends React.Component {
             after: null
           }
         });
-        const newRatesInCache = getRates.data.edges.filter(
-          edge => edge.node.id !== res.data.setRate[0].id
-        );
+        const newRatesInCache = getRates.data.edges.filter(edge => edge.node.id !== res.data.setRate[0].id);
         this.props.client.writeQuery({
           query: GET_RATES,
           variables: {
@@ -200,13 +190,7 @@ class RateCard extends React.Component {
   };
 
   render() {
-    const {
-      me,
-      rate,
-      currentlyOverlayed,
-      currentlyOverlayedResolveMethod,
-      _updateParentState
-    } = this.props;
+    const { me, rate, currentlyOverlayed, currentlyOverlayedResolveMethod, _updateParentState } = this.props;
     const { isOverlayed } = this.state;
     return (
       <TouchableOpacity
@@ -237,9 +221,7 @@ class RateCard extends React.Component {
           style={{
             elevation: 3
           }}
-          isToday={
-            dayjs(rate.offeredDate).format("MM-DD") === dayjs().format("MM-DD")
-          }
+          isToday={dayjs(rate.offeredDate).format("MM-DD") === dayjs().format("MM-DD")}
         >
           <AvatarRow>
             <Avatar>
@@ -247,9 +229,7 @@ class RateCard extends React.Component {
                 source={
                   rate.inputperson.profile.image
                     ? {
-                        uri: `${AWS_S3_ENDPOINT}${
-                          rate.inputperson.profile.image
-                        }`
+                        uri: `${AWS_S3_ENDPOINT}${rate.inputperson.profile.image}`
                       }
                     : require("../assets/profile_images/dummy.png")
                 }
@@ -260,9 +240,7 @@ class RateCard extends React.Component {
                   borderRadius: 15
                 }}
               />
-              <Caption style={{ marginLeft: 5 }}>
-                {rate.inputperson.profile.profile_name}
-              </Caption>
+              <Caption style={{ marginLeft: 5 }}>{rate.inputperson.profile.profile_name}</Caption>
             </Avatar>
             <Text>{rate.client.name}</Text>
 
@@ -270,9 +248,7 @@ class RateCard extends React.Component {
               <Text style={{ fontSize: 12, color: "#aaa", marginRight: 5 }}>
                 {dayjs(rate.offeredDate).format("MM-DD")}
               </Text>
-              <Text style={{ fontSize: 12, color: "#aaa" }}>
-                {dayjs(rate.effectiveDate).format("MM-DD")}
-              </Text>
+              <Text style={{ fontSize: 12, color: "#aaa" }}>{dayjs(rate.effectiveDate).format("MM-DD")}</Text>
             </Validty>
           </AvatarRow>
 
@@ -329,11 +305,11 @@ class RateCard extends React.Component {
                   onPress={() => {
                     if (me.data.email !== rate.inputperson.email) {
                       Alert.alert(
-                        "확인",
-                        "복제하시겠습니까?",
+                        "Confirm",
+                        "Please confirm the duplication.",
                         [
                           {
-                            text: "취소",
+                            text: "Cancel",
                             onPress: () => {},
                             style: "cancel"
                           },
@@ -347,41 +323,36 @@ class RateCard extends React.Component {
                         { cancelable: false }
                       );
                     } else {
-                      Toast.show(
-                        `이미 ${
-                          me.data.profile.profile_name
-                        }님께서 입력한 운임 입니다.`,
-                        Toast.SHORT
-                      );
+                      Toast.show(`Already added by ${me.data.profile.profile_name}.`, Toast.SHORT);
                     }
                   }}
                 >
-                  <Text>복제</Text>
+                  <Text>Duplicate</Text>
                 </Button>
                 <Button
                   styleName="lg-gutter-horizontal"
                   onPress={() => {
                     if (me.data.email !== rate.inputperson.email) {
-                      Toast.show(`입력자가 다릅니다.`, Toast.SHORT);
+                      Toast.show(`This is not yours`, Toast.SHORT);
                     } else {
                       this.props.navigation.navigate("Add", { rate });
                     }
                   }}
                 >
-                  <Text>수정</Text>
+                  <Text>Modify</Text>
                 </Button>
                 <Button
                   styleName="lg-gutter-horizontal"
                   onPress={() => {
                     if (me.data.email !== rate.inputperson.email) {
-                      Toast.show(`입력자가 다릅니다.`, Toast.SHORT);
+                      Toast.show(`This is not yours`, Toast.SHORT);
                     } else {
                       Alert.alert(
-                        "확인",
-                        "삭제하시겠습니까?",
+                        "Confirm",
+                        "Please confirm the delete",
                         [
                           {
-                            text: "취소",
+                            text: "Cancel",
                             onPress: () => {},
                             style: "cancel"
                           },
@@ -401,7 +372,7 @@ class RateCard extends React.Component {
                     }
                   }}
                 >
-                  <Text>삭제</Text>
+                  <Text>Delete</Text>
                 </Button>
               </View>
             </Overlay>

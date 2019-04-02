@@ -1,21 +1,8 @@
 import React from "react";
 import { Alert } from "react-native";
-import {
-  View,
-  Subtitle,
-  Button,
-  Icon,
-  Row,
-  Image,
-  Caption,
-  Text
-} from "@shoutem/ui";
+import { View, Subtitle, Button, Icon, Row, Image, Caption, Text } from "@shoutem/ui";
 import { withApollo } from "react-apollo";
-import {
-  REMOVE_READERS,
-  GET_READERS,
-  ADD_READERS
-} from "./Friends/FriendsQueries";
+import { REMOVE_READERS, GET_READERS, ADD_READERS } from "./Friends/FriendsQueries";
 import Toast from "react-native-simple-toast";
 import { getAWSS3Url } from "../env.config";
 
@@ -40,10 +27,10 @@ class UserCard extends React.Component {
           }
         });
       })
-      .then(() => Toast.show("추가되었습니다", Toast.SHORT))
+      .then(() => Toast.show("Added!", Toast.SHORT))
       .catch(error => {
         console.warn(error);
-        Toast.show("다시 시도해주십시오", Toast.SHORT);
+        Toast.show("Please try again.", Toast.SHORT);
       });
   };
 
@@ -58,9 +45,7 @@ class UserCard extends React.Component {
         const readers = this.props.client.readQuery({
           query: GET_READERS
         });
-        const newReaders = readers.getReaders.filter(
-          reader => reader.id !== res.data.removeRateReader.id
-        );
+        const newReaders = readers.getReaders.filter(reader => reader.id !== res.data.removeRateReader.id);
         this.props.client.writeQuery({
           query: GET_READERS,
           data: {
@@ -68,10 +53,10 @@ class UserCard extends React.Component {
           }
         });
       })
-      .then(() => Toast.show("삭제되었습니다", Toast.SHORT))
+      .then(() => Toast.show("Deleted!", Toast.SHORT))
       .catch(error => {
         console.warn(error);
-        Toast.show("다시 시도해주십시오", Toast.SHORT);
+        Toast.show("Please try again.", Toast.SHORT);
       });
   };
 
@@ -100,16 +85,16 @@ class UserCard extends React.Component {
           <Button
             onPress={() =>
               Alert.alert(
-                "확인",
-                "삭제하시겠습니까?",
+                "Confirm",
+                "Please confirm to delete",
                 [
                   {
-                    text: "취소",
+                    text: "Cancel",
                     onPress: () => {},
                     style: "cancel"
                   },
                   {
-                    text: "삭제",
+                    text: "Delete",
                     onPress: () => {
                       this._removeReader();
                     }
@@ -122,22 +107,20 @@ class UserCard extends React.Component {
             <Icon styleName="disclosure" name="close" />
           </Button>
         ) : null}
-        {isTeller &&
-        onlyTellers.filter(onlyteller => onlyteller.id === user.id).length >
-          0 ? (
+        {isTeller && onlyTellers.filter(onlyteller => onlyteller.id === user.id).length > 0 ? (
           <Button
             onPress={() =>
               Alert.alert(
-                "확인",
-                "추가하시겠습니까?",
+                "Confirm",
+                "Please confirm to add.",
                 [
                   {
-                    text: "취소",
+                    text: "Cancel",
                     onPress: () => {},
                     style: "cancel"
                   },
                   {
-                    text: "추가",
+                    text: "Add",
                     onPress: () => {
                       this._addReader();
                     }

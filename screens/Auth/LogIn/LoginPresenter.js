@@ -25,21 +25,11 @@ class LogInPresenter extends React.Component {
             onChangeText={text => this.props.handleChange(text, "password")}
           />
         </View>
-        <Button
-          styleName="action sm-gutter secondary"
-          onPress={() => this.props.handleSubmit()}
-        >
-          {isLoging ? (
-            <Spinner style={{ marginTop: 10, marginBottom: 10 }} />
-          ) : (
-            <Text>로그인</Text>
-          )}
+        <Button styleName="action sm-gutter secondary" onPress={() => this.props.handleSubmit()}>
+          {isLoging ? <Spinner style={{ marginTop: 10, marginBottom: 10 }} /> : <Text>LOG IN</Text>}
         </Button>
-        <Button
-          styleName="action sm-gutter"
-          onPress={() => this.props.navigation.navigate("SignUp")}
-        >
-          <Text>회원가입</Text>
+        <Button styleName="action sm-gutter" onPress={() => this.props.navigation.navigate("SignUp")}>
+          <Text>SIGN UP</Text>
         </Button>
       </View>
     );

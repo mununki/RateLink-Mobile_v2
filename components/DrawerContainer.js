@@ -19,54 +19,49 @@ class DrawerContainer extends React.Component {
                 if (loading) return <Spinner />;
                 if (error) return <Text>Error :(</Text>;
 
-                if (data && data.me.ok) {
-                  return (
-                    <View styleName="horizontal">
-                      <Image
-                        source={
-                          data.me.data.profile.image
-                            ? {
-                                uri: `${AWS_S3_ENDPOINT}${data.me.data.profile.image}`
-                              }
-                            : require("../assets/profile_images/dummy.png")
-                        }
-                        style={{
-                          width: 70,
-                          height: 70,
-                          borderWidth: 1,
-                          borderColor: "#fff",
-                          borderRadius: 35,
-                          marginLeft: 30,
-                          marginBottom: -20
-                        }}
-                      />
-                      <Text
-                        style={{
-                          marginLeft: 20,
-                          marginBottom: 10,
-                          color: "#fff"
-                        }}
-                      >
-                        {data.me.data.profile.profile_name} 님
-                      </Text>
-                    </View>
-                  );
-                } else {
-                  logOut(this.props.navigation)();
-                  return <Text>Error :(</Text>;
-                }
+                return (
+                  <View styleName="horizontal">
+                    <Image
+                      source={
+                        data.me.data.profile.image
+                          ? {
+                              uri: `${AWS_S3_ENDPOINT}${data.me.data.profile.image}`
+                            }
+                          : require("../assets/profile_images/dummy.png")
+                      }
+                      style={{
+                        width: 70,
+                        height: 70,
+                        borderWidth: 1,
+                        borderColor: "#fff",
+                        borderRadius: 35,
+                        marginLeft: 30,
+                        marginBottom: -20
+                      }}
+                    />
+                    <Text
+                      style={{
+                        marginLeft: 20,
+                        marginBottom: 10,
+                        color: "#fff"
+                      }}
+                    >
+                      {data.me.data.profile.profile_name}
+                    </Text>
+                  </View>
+                );
               }}
             </Query>
           </View>
           <View style={{ marginTop: 30, padding: 20 }}>
             <TouchableOpacity style={{ padding: 15 }} onPress={() => this.props.navigation.navigate("Home")}>
-              <Title>내 운임</Title>
+              <Title>My Rates</Title>
             </TouchableOpacity>
             <TouchableOpacity style={{ padding: 15 }} onPress={() => this.props.navigation.navigate("Profile")}>
-              <Title>내 프로필</Title>
+              <Title>Profile</Title>
             </TouchableOpacity>
             <TouchableOpacity style={{ padding: 15 }} onPress={logOut(this.props.navigation)}>
-              <Title>로그아웃</Title>
+              <Title>Log Out</Title>
             </TouchableOpacity>
           </View>
         </View>

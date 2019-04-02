@@ -177,7 +177,7 @@ class RatesContainer extends React.Component {
       headerRight: (
         <Button styleName="clear" onPress={() => navigation.navigate("Search")}>
           <Icon name="search" />
-          <Subtitle style={{ marginLeft: -5, marginRight: 10 }}>검색</Subtitle>
+          <Subtitle style={{ marginLeft: -5, marginRight: 10 }}>Search</Subtitle>
         </Button>
       ),
       headerStyle: {

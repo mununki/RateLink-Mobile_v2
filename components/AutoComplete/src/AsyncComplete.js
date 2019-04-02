@@ -1,15 +1,6 @@
 import React from "react";
 import { Modal, View as NativeView } from "react-native";
-import {
-  View,
-  Subtitle,
-  Text,
-  Button,
-  Icon,
-  TextInput,
-  TouchableOpacity,
-  Spinner
-} from "@shoutem/ui";
+import { View, Subtitle, Text, Button, Icon, TextInput, TouchableOpacity, Spinner } from "@shoutem/ui";
 import { ScrollView } from "react-native-gesture-handler";
 
 class AsyncComplete extends React.Component {
@@ -44,12 +35,9 @@ class AsyncComplete extends React.Component {
     return (
       <View>
         <View styleName="horizontal v-center">
-          <Button
-            style={{ flex: 1, backgroundColor: "#eee" }}
-            onPress={() => this._controlModal(true)}
-          >
+          <Button style={{ flex: 1, backgroundColor: "#eee" }} onPress={() => this._controlModal(true)}>
             <Subtitle style={{ marginTop: 10, marginBottom: 10 }}>
-              {selected.length > 0 ? selected[0].label : "선택없음"}
+              {selected.length > 0 ? selected[0].label : "not selected"}
             </Subtitle>
             <Icon name="drop-down" />
           </Button>
@@ -97,7 +85,7 @@ class AsyncComplete extends React.Component {
                   marginRight: 5
                 }}
               >
-                <Text>{options.length}개 찾음</Text>
+                <Text>{options.length} found</Text>
               </View>
               <TextInput
                 autoFocus={true}
@@ -124,18 +112,12 @@ class AsyncComplete extends React.Component {
                         this._controlModal(false);
                       }}
                     >
-                      <Subtitle styleName="md-gutter-vertical">
-                        {option.label}
-                      </Subtitle>
+                      <Subtitle styleName="md-gutter-vertical">{option.label}</Subtitle>
                     </Button>
                   ))
                 ) : (
                   <View styleName="horizontal h-center">
-                    {isLoading ? (
-                      <Spinner />
-                    ) : (
-                      <Text>검색어를 입력하세요.</Text>
-                    )}
+                    {isLoading ? <Spinner /> : <Text>Please input keyword.</Text>}
                   </View>
                 )}
               </ScrollView>

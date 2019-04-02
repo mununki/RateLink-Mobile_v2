@@ -7,7 +7,7 @@ import { saveTokenToAsyncStorage } from "../../../utils/handleAsyncStorage";
 class LogInContainer extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      headerTitle: "로그인",
+      headerTitle: "LOG IN",
       headerStyle: {
         backgroundColor: "#6dbad8"
       },
@@ -46,8 +46,7 @@ class LogInContainer extends React.Component {
       await saveTokenToAsyncStorage(res.data.login.data.token);
       this.props.navigation.navigate("App");
     } else {
-      alert("Email과 비밀번호를 확인하세요");
-      this.setState({ isLoging: false });
+      alert("Please check the e-mail and password");
     }
   };
 

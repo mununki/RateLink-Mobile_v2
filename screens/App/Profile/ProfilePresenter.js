@@ -1,13 +1,6 @@
 import React from "react";
 import { Image } from "react-native";
-import {
-  View,
-  Text,
-  TextInput,
-  Spinner,
-  Button,
-  TouchableOpacity
-} from "@shoutem/ui";
+import { View, Text, TextInput, Spinner, Button, TouchableOpacity } from "@shoutem/ui";
 import { AutoComplete } from "../../../components/AutoComplete";
 import { withApollo } from "react-apollo";
 import { getAWSS3Url } from "../../../env.config";
@@ -20,10 +13,10 @@ import { ReactNativeFile } from "apollo-upload-client";
 const AWS_S3_ENDPOINT = getAWSS3Url();
 
 const jobOptions = [
-  { value: "0", label: "선택없음" },
-  { value: "1", label: "선사" },
-  { value: "2", label: "포워더" },
-  { value: "3", label: "기타" }
+  { value: "0", label: "(no select)" },
+  { value: "1", label: "Liner" },
+  { value: "2", label: "Forwarder" },
+  { value: "3", label: "Others" }
 ];
 
 const convertJobBoolean = job_boolean => {
@@ -36,9 +29,7 @@ class ProfilePresenter extends React.Component {
     this.state = {
       profile_name: this.props.me.data.profile.profile_name,
       company: this.props.me.data.profile.company,
-      job_boolean: this.props.me.data.profile.job_boolean
-        ? this.props.me.data.profile.job_boolean
-        : "0",
+      job_boolean: this.props.me.data.profile.job_boolean ? this.props.me.data.profile.job_boolean : "0",
       isSaving: false
     };
   }
@@ -59,9 +50,9 @@ class ProfilePresenter extends React.Component {
       })
       .then(res => {
         if (res.data.updateProfile.ok) {
-          Toast.show("저장 완료!", Toast.SHORT);
+          Toast.show("Successfully saved!", Toast.SHORT);
         } else {
-          Toast.show("다시 시도해주세요", Toast.SHORT);
+          Toast.show("Please try again", Toast.SHORT);
         }
         this.setState({ isSaving: false });
       })
@@ -79,13 +70,13 @@ class ProfilePresenter extends React.Component {
       })
       .then(res => {
         if (res.data.updateProfileImage.ok) {
-          Toast.show("저장 성공", Toast.SHORT);
+          Toast.show("Successfully saved!", Toast.SHORT);
         } else {
-          Toast.show("다시 시도해주세요", Toast.SHORT);
+          Toast.show("Please try again", Toast.SHORT);
         }
       })
       .catch(error => {
-        Toast.show("다시 시도해주세요", Toast.SHORT);
+        Toast.show("Please try again", Toast.SHORT);
       });
   };
 
@@ -111,10 +102,7 @@ class ProfilePresenter extends React.Component {
     return (
       <View styleName="flexible vertical">
         <View styleName="horizontal v-center">
-          <View
-            styleName="vertical v-center h-center"
-            style={{ width: 150, backgroundColor: "#fff" }}
-          >
+          <View styleName="vertical v-center h-center" style={{ width: 150, backgroundColor: "#fff" }}>
             <TouchableOpacity onPress={() => this._pickImage()}>
               <Image
                 source={
@@ -139,18 +127,16 @@ class ProfilePresenter extends React.Component {
               autoComplete="off"
               autoCapitalize="none"
               autoCorrect={false}
-              placeholder={`별명`}
+              placeholder={`Nickname`}
               value={`${profile_name}`}
-              onChangeText={text =>
-                this._handleChangeText(text, "profile_name")
-              }
+              onChangeText={text => this._handleChangeText(text, "profile_name")}
               style={{ backgroundColor: "#eee", margin: 1 }}
             />
             <TextInput
               autoComplete="off"
               autoCapitalize="none"
               autoCorrect={false}
-              placeholder={`회사이름`}
+              placeholder={`Company name`}
               value={`${company}`}
               onChangeText={text => this._handleChangeText(text, "company")}
               style={{ backgroundColor: "#eee", margin: 1 }}
@@ -167,16 +153,8 @@ class ProfilePresenter extends React.Component {
                 }
               }}
             />
-            <Button
-              styleName="secondary"
-              onPress={() => this._handleSave()}
-              style={{ marginTop: 2 }}
-            >
-              {isSaving ? (
-                <Spinner style={{ marginTop: 10, marginBottom: 10 }} />
-              ) : (
-                <Text>SAVE</Text>
-              )}
+            <Button styleName="secondary" onPress={() => this._handleSave()} style={{ marginTop: 2 }}>
+              {isSaving ? <Spinner style={{ marginTop: 10, marginBottom: 10 }} /> : <Text>SAVE</Text>}
             </Button>
           </View>
         </View>
