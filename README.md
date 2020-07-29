@@ -25,5 +25,6 @@
 - [x] Profile update + avatar upload
 - [x] Friend management
 - [x] Search users
+- [x] Styling
+- [ ] Remember email in login screen
 - [ ] Rate Chart
-- [ ] Styling
